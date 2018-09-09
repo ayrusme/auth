@@ -11,7 +11,6 @@ app = Sanic(__name__)
 blueprint = Blueprint(codes.ROUTE_VERSION_V1)
 
 @blueprint.route('/ping', methods=['GET'])
-@auth_wrapper()
 async def homepage(request):
     return json({'status': 'alive'})
 
