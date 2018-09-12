@@ -1,0 +1,19 @@
+{
+    "SERVER": {
+        "URL": "127.0.0.1",
+        "PORT": 9090
+    },
+    "DATABASE": {
+        "TYPE": "mysql",
+        "NAME": "astrix",
+        "DRIVER": "pymysql",
+        "USERNAME": "root",
+        "PASSWORD": "root",
+        "HOST": "localhost",
+        "PORT": 3306
+    },
+    "LOG": {
+        "LEVEL": "INFO",
+        "FILE": "logs.log"
+    }
+}

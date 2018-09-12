@@ -5,10 +5,11 @@ from sanic import Sanic, Blueprint
 from sanic.response import json
 
 from auth.auth import auth_wrapper
-from helpers import config, codes
+from config.config import SERVER_URL, SERVER_PORT
+from helpers.codes import ROUTE_VERSION_V1
 
 app = Sanic(__name__)
-blueprint = Blueprint(codes.ROUTE_VERSION_V1)
+blueprint = Blueprint(ROUTE_VERSION_V1)
 
 @blueprint.route('/ping', methods=['GET'])
 async def homepage(request):
@@ -17,6 +18,6 @@ async def homepage(request):
 if __name__ == '__main__':
     app.blueprint(blueprint)
     app.run(
-        host=config.SERVER_URL,
-        port=config.SERVER_PORT
+        host=SERVER_URL,
+        port=SERVER_PORT
     )
