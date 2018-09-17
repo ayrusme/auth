@@ -7,7 +7,7 @@ from functools import wraps
 import jwt
 from sanic.exceptions import abort, HeaderNotFound
 
-from . import auth_codes as codes
+import app.auth.auth_codes as codes
 
 """
 Authentication Wrapper for Project Astrix
