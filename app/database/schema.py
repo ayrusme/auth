@@ -12,12 +12,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship
 
 from sqlalchemy_utils import UUIDType, EmailType
-
+from app.helpers.helpers import CURRENT_TIME
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
-
-
-def DEFAULT_TIME():
-    return int(datetime.now(tz=timezone.utc).timestamp())
 
 
 """
@@ -67,11 +63,11 @@ class Consumer(Base):
     addresses = relationship('addresses', backref='consumer', lazy=True)
     last_login = Column(Integer, nullable=False, default=0)
     created_at = deferred(
-        Column(Integer, nullable=False, default=None),
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=None),
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
@@ -109,11 +105,11 @@ class Address(Base):
     person_id = Column(Integer, ForeignKey('consumer.guid'),
                        nullable=False)
     created_at = deferred(
-        Column(Integer, nullable=False, default=None),
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=None),
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
