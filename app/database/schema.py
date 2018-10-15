@@ -11,8 +11,9 @@ from sqlalchemy import (Column, ForeignKey, Index, Integer, Sequence, String,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship
 
-from sqlalchemy_utils import UUIDType, EmailType
+from sqlalchemy_utils import UUIDType, EmailType, PasswordType
 from app.helpers.helpers import CURRENT_TIME
+
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
 
 
@@ -43,14 +44,13 @@ updated_at : Integer
     The timestamp of when the user data was updated
 """
 
-# TODO Hash Password and Store
 
-
-class Consumer(Base):
-    __tablename__ = "consumer"
+class User(Base):
+    # TODO Hash Password and Store
+    __tablename__ = "user"
 
     guid = Column(UUIDType(binary=False), primary_key=True)
-    username = Column(String(255), nullable=False)
+    username = Column(String(255), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
     first_name = deferred(
         Column(String(255), nullable=False)
@@ -60,7 +60,7 @@ class Consumer(Base):
     )
     email = Column(EmailType)
     phone = Column(Integer, nullable=False)
-    addresses = relationship('addresses', backref='consumer', lazy=True)
+    addresses = relationship('addresses', backref='user', lazy=True)
     last_login = Column(Integer, nullable=False, default=0)
     created_at = deferred(
         Column(Integer, nullable=False, default=CURRENT_TIME()),
@@ -87,6 +87,43 @@ class Consumer(Base):
 
 
 """
+    This table contains users and their authentication credentials
+
+    Attributes
+    ----------
+
+    See Also
+    --------
+    Consumer
+    """
+
+
+class UserAuthentication(Base):
+    # Table name in the database
+    __tablename__ = 'consumer_auth'
+
+    # Columns
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    user_id = Column(UUIDType(binary=False), ForeignKey('user.guid'))
+    username = Column(String(255), nullable=False)
+    password = Column(PasswordType(
+        schemes=[
+            'pbkdf2_sha512',
+            'md5_crypt'
+        ],
+        deprecated=['md5_crypt']
+    ))
+    created_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+    updated_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+
+
+"""
 The model for the address of a consumer
 
 ADDRESS MODEL
@@ -102,7 +139,7 @@ class Address(Base):
 
     guid = Column(UUIDType(binary=False), primary_key=True)
     address = Column(String(120), nullable=False)
-    person_id = Column(Integer, ForeignKey('consumer.guid'),
+    user_id = Column(Integer, ForeignKey('user.guid'),
                        nullable=False)
     created_at = deferred(
         Column(Integer, nullable=False, default=CURRENT_TIME()),

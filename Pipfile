@@ -8,6 +8,8 @@ sanic = "*"
 sqlamp = "*"
 sqlalchemy = "*"
 sqlalchemy-utils = "*"
+sanic-cors = "*"
+sanic-jwt = "*"
 
 [dev-packages]
 

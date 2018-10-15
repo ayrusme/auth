@@ -5,9 +5,30 @@ This file holds the authentication layer for all incoming requests
 from functools import wraps
 
 import jwt
-from sanic.exceptions import abort, HeaderNotFound
+from sanic.exceptions import HeaderNotFound, abort
 
-import app.auth.auth_codes as codes
+from auth.auth_codes import JWT_ALGORITHM, JWT_SECRET
+
+
+"""
+Function to encrypt the given payload
+"""
+
+
+def encrypt(payload):
+    # TODO Add encryption technique
+    pass
+
+
+"""
+Function to decrypt the given payload
+"""
+
+
+def decrypt(payload):
+    # TODO Add decryption technique
+    pass
+
 
 """
 Authentication Wrapper for Project Astrix
