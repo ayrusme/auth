@@ -10,32 +10,26 @@ from sanic.exceptions import HeaderNotFound, abort
 from auth.auth_codes import JWT_ALGORITHM, JWT_SECRET
 
 
-"""
-Function to encrypt the given payload
-"""
-
-
 def encrypt(payload):
+    """
+    Function to encrypt the given payload
+    """
     # TODO Add encryption technique
     pass
 
 
-"""
-Function to decrypt the given payload
-"""
-
-
 def decrypt(payload):
+    """
+    Function to decrypt the given payload
+    """
     # TODO Add decryption technique
     pass
 
 
-"""
-Authentication Wrapper for Project Astrix
-"""
-
-
 def auth_wrapper():
+    """
+    Authentication Wrapper for Project Astrix
+    """
     def decorator(f):
         @wraps(f)
         async def decorated_function(request, *args, **kwargs):
