@@ -1,5 +1,5 @@
-from sanic.response import json
+from flask import jsonify
 
-from sanic.blueprints import Blueprint
+from flask.blueprints import Blueprint
 
-consumer_blueprint = Blueprint('consumer_routes')
+user_blueprint = Blueprint('user_routes', __name__, url_prefix='/v1/')

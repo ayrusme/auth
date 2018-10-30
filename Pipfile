@@ -11,6 +11,8 @@ cerberus = "*"
 flask = "*"
 flask-cors = "*"
 flask-jwt = "*"
+pip = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
