@@ -26,19 +26,21 @@ BAD_REQUEST = {
 
 NOT_AUTHENTICATED = {
     "status_code": NOT_AUTHENTICATED,
-    "payload": {
-        "status": ERROR_STATUS,
-        "message": "Not Authenticated",
-        "description": "Bad username or password"
-    }
+    "status": ERROR_STATUS,
+    "message": "Not Authenticated",
+    "description": "Bad username or password"
 }
 
 NOT_AUTHORIZED = {
     "status_code": NOT_AUTHORIZED,
-    "payload": {
-        "status": ERROR_STATUS,
-        "message": "Unauthorized",
-        "description": "You do not have access for this particular resource"
-    }
+    "status": ERROR_STATUS,
+    "message": "Unauthorized",
+    "description": "You do not have access for this particular resource"
 }
 
+AUTH_OKAY = {
+    "status_code": SUCCESS_STATUS_CODE,
+    "status": SUCCESS_STATUS,
+    "message": "Auth success",
+    "description": "Move along!"
+}
