@@ -4,12 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sanic = "*"
 sqlamp = "*"
 sqlalchemy = "*"
 sqlalchemy-utils = "*"
-sanic-cors = "*"
-sanic-jwt = "*"
+cerberus = "*"
+flask = "*"
+flask-cors = "*"
+flask-jwt = "*"
 
 [dev-packages]
 
