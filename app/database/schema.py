@@ -12,7 +12,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship
 
 from sqlalchemy_utils import UUIDType, EmailType, PasswordType
-from app.helpers.helpers import CURRENT_TIME
+from helpers.helpers import CURRENT_TIME
 
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
 
@@ -120,6 +120,14 @@ class UserAuthentication(Base):
         group='defaults'
     )
 
+    def __init__(self, guid, user_id, username,
+                 password, created_at, updated_at):
+        self.guid = guid
+        self.user_id = user_id
+        self.username = username
+        self.password = password
+        self.created_at =
+
 
 class Address(Base):
     """
@@ -166,7 +174,7 @@ class Address(Base):
     )
 
     def __init__(self, guid, user_id, address_line1,
-                 address_line2, city, country, pin_code, 
+                 address_line2, city, country, pin_code,
                  lat_long, created_at, updated_at):
         self.guid = guid
         self.user_id = user_id

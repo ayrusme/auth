@@ -5,26 +5,26 @@ This file takes care of the engine decalaration
 from sqlalchemy import create_engine, event, exc, select
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from app.config.config import DB_URI
-from app.database.schema import Base
+from config.config import DB_URI
+from database.schema import Base
 
 Session = scoped_session(sessionmaker())
 
-engine = create_engine(DB_URI, {
+_engine = create_engine(DB_URI, {
     "encoding": "utf-8"
 })
 try:
-    _ = engine.connect()
+    _ = _engine.connect()
 except exc.DBAPIError:
-    engine = create_engine(DB_URI, {
-        "encoding": "utf-8"
-    })
+    _engine = create_engine(DB_URI, {
+    "encoding": "utf-8"
+})
 Session.remove()
-Session.configure(bind=engine, autoflush=False, expire_on_commit=False)
-Base.metadata.create_all(engine)
+Session.configure(bind=_engine, autoflush=False, expire_on_commit=False)
+Base.metadata.create_all(_engine)
 
 
-@event.listens_for(engine, "engine_connect")
+@event.listens_for(_engine, "engine_connect")
 def ping_connection(connection, branch):
     if branch:
         # "branch" refers to a sub-connection of a connection,
@@ -52,7 +52,6 @@ def ping_connection(connection, branch):
             # itself and establish a new connection.  The disconnect detection
             # here also causes the whole connection pool to be invalidated
             # so that all stale connections are discarded.
-            logging.info("Connection Refreshed")
             connection.scalar(select([1]))
         else:
             raise
