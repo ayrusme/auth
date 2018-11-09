@@ -4,15 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlamp = "*"
-sqlalchemy = "*"
-sqlalchemy-utils = "*"
-cerberus = "*"
 flask = "*"
+sqlalchemy = "*"
+cerberus = "*"
 flask-cors = "*"
-flask-jwt = "*"
-pip = "*"
 flask-jwt-extended = "*"
+sqlalchemy-utils = "*"
+sqlamp = "*"
 
 [dev-packages]
 
