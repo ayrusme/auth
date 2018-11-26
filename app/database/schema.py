@@ -56,6 +56,8 @@ class User(Base):
     email = Column(EmailType)
     phone = Column(Integer, nullable=False)
     addresses = relationship('addresses', backref='user', lazy=True)
+    authentication = relationship('user_auth', backref='user')
+    role = relationship('user_role', backref='user')
     last_login = Column(Integer, nullable=False, default=0)
     created_at = deferred(
         Column(Integer, nullable=False, default=CURRENT_TIME()),
@@ -126,7 +128,8 @@ class UserAuthentication(Base):
         self.user_id = user_id
         self.username = username
         self.password = password
-        self.created_at =
+        self.created_at = created_at
+        self.updated_at = updated_at
 
 
 class Address(Base):
@@ -194,8 +197,6 @@ class Role(Base):
 
     ROLE MODEL
     ----------------------------------
-    guid: String
-        The unique ID associted with the Role
     role_id: Integer
         The ID for the particular role  
     role_name: String
@@ -206,7 +207,61 @@ class Role(Base):
 
     __tablename__ = "roles"
 
-    guid = Column(UUIDType(binary=False), primary_key=True)
-    role_id = Column(UUIDType(binary=False), nullable=False)
+    role_id = Column(UUIDType(binary=False), primary_key=True)
     role_name = Column(String(20), nullable=False)
     description = Column(String(20), nullable=False)
+    created_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+    updated_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+
+    def __init__(self, role_id, role_name,
+                 description, created_at, updated_at):
+        self.role_id = role_id
+        self.role_name = role_name
+        self.description = description
+        self.created_at = created_at
+        self.updated_at = updated_at
+
+
+class UserRole(Base):
+    """
+    Model for all user roles
+
+    User Role Model
+    -------------------------
+    guid: UUIDType
+        The unique ID associated with the record
+    user_id: String
+        The user id associated with the role
+    role_id: String
+        The role id associated with the user
+    """
+
+    __tablename__ = 'user_role'
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    user_id = Column(String, ForeignKey('user.guid'),
+                     nullable=False)
+    role_id = Column(String, ForeignKey('roles.role_id'),
+                     nullable=False)
+    created_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+    updated_at = deferred(
+        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        group='defaults'
+    )
+
+    def __init__(self, guid, user_id,
+                 role_id, created_at, updated_at):
+        self.guid = guid
+        self.user_id = user_id
+        self.role_id = role_id
+        self.created_at = created_at
+        self.updated_at = updated_at
