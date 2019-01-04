@@ -19,12 +19,12 @@ with open ('config.json') as file:
     USERNAME = data['DATABASE']['USERNAME'] if data['DATABASE']['USERNAME'] else "root"
     PASSWORD = data['DATABASE']['PASSWORD'] if data['DATABASE']['PASSWORD'] else "root"
 
+    #TODO If password exists, add password to URI
     # construct the URI
-    DB_URI = "{TYPE}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{NAME}".format(
+    DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}".format(
         TYPE=DATABASE_TYPE,
         DRIVER=DATABASE_DRIVER,
         USERNAME=USERNAME,
-        PASSWORD=PASSWORD,
         HOST=HOST,
         PORT=PORT,
         NAME=DATABASE_NAME

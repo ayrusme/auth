@@ -8,7 +8,7 @@
         "NAME": "astrix",
         "DRIVER": "pymysql",
         "USERNAME": "root",
-        "PASSWORD": "root",
+        "PASSWORD": "",
         "HOST": "localhost",
         "PORT": 3306
     },

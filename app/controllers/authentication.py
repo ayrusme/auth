@@ -37,7 +37,7 @@ def signup(request):
     pass
 
 
-@auth_blueprint.route('refresh', methods=['POST'])
+@auth_blueprint.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh_token():
     """

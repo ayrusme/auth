@@ -6,7 +6,8 @@ from sqlalchemy import create_engine, event, exc, select
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config.config import DB_URI
-from database.schema import Base
+from .schema import (Address, Base, Role, User, UserAuthentication,
+                             UserRole)
 
 Session = scoped_session(sessionmaker())
 

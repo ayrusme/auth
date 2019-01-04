@@ -159,7 +159,7 @@ class Address(Base):
     __tablename__ = "addresses"
 
     guid = Column(UUIDType(binary=False), primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.guid'),
+    user_id = Column(UUIDType(binary=False), ForeignKey('user.guid'),
                      nullable=False)
     address_line1 = Column(String(120), nullable=False)
     address_line2 = Column(String(120), nullable=True)
@@ -245,9 +245,9 @@ class UserRole(Base):
     __tablename__ = 'user_role'
 
     guid = Column(UUIDType(binary=False), primary_key=True)
-    user_id = Column(String, ForeignKey('user.guid'),
+    user_id = Column(UUIDType(binary=False), ForeignKey('user.guid'),
                      nullable=False)
-    role_id = Column(String, ForeignKey('roles.role_id'),
+    role_id = Column(UUIDType(binary=False), ForeignKey('roles.role_id'),
                      nullable=False)
     created_at = deferred(
         Column(Integer, nullable=False, default=CURRENT_TIME()),

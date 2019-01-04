@@ -11,6 +11,9 @@ flask-cors = "*"
 flask-jwt-extended = "*"
 sqlalchemy-utils = "*"
 sqlamp = "*"
+pymysql = "*"
+passlib = "*"
+pyodbc = "*"
 
 [dev-packages]
 
