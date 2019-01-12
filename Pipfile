@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 flask = "*"
 sqlalchemy = "*"
-cerberus = "*"
 flask-cors = "*"
 flask-jwt-extended = "*"
 sqlalchemy-utils = "*"
@@ -14,8 +13,10 @@ sqlamp = "*"
 pymysql = "*"
 passlib = "*"
 pyodbc = "*"
+schema = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.7"
