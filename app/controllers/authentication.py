@@ -9,14 +9,15 @@ from flask.blueprints import Blueprint
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_refresh_token_required)
 
-from helpers.codes import AUTH_OKAY, BAD_REQUEST
+from helpers.codes import AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED
+from models.authentication import login
 
 auth_blueprint = Blueprint(
     'authentication_v1', __name__, url_prefix='/v1/auth')
 
 
 @auth_blueprint.route('/login', methods=['POST'])
-def login(request):
+def login():
     """
     Login Endpoint
     """
@@ -24,17 +25,23 @@ def login(request):
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         if username is not None and password is not None:
-            # TODO Finish login flow. Construct JWT. Link Model.
-            pass
+            result, auth_token, refresh_token = login(username, password)
+            if result:
+                response = deepcopy(AUTH_OKAY)
+                response['access_token'] = auth_token
+                response['refresh_token'] = refresh_token
+                return jsonify(response)
+            return jsonify(NOT_AUTHENTICATED)
     return jsonify(BAD_REQUEST)
 
 
 @auth_blueprint.route('/register', methods=['POST'])
-def signup(request):
+def signup():
     """
     Endpoint to allow users to signup
     """
-    pass
+    if hasattr(request, "json") and request.json is not None:
+
 
 
 @auth_blueprint.route('/refresh', methods=['POST'])

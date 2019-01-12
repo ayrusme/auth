@@ -150,7 +150,7 @@ class Address(Base):
         The city of the user
     country: String
         The country of the user
-    pin_code: String
+    pin_code: Integer
         The pin code of the user
     lat_long: String
         The geo-coorinates of the user
@@ -165,7 +165,7 @@ class Address(Base):
     address_line2 = Column(String(120), nullable=True)
     city = Column(String(30), nullable=False)
     country = Column(String(20), nullable=False)
-    pin_code = Column(String(10), nullable=False)
+    pin_code = Column(Integer, nullable=False)
     lat_long = Column(String(50), nullable=False)
     created_at = deferred(
         Column(Integer, nullable=False, default=CURRENT_TIME()),
