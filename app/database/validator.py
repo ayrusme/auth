@@ -23,8 +23,8 @@ ADDRESS_SCHEMA = {
     "address_line2": And(str, len),
     "city": And(str, len),
     "country": And(str, len),
-    "pin_code": And(int, len),
-    "lat_long": And(int, len)
+    "pin_code": int,
+    "lat_long": And(str, len)
 }
 
 AUTHENTICATION_SCHEMA = {
