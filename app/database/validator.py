@@ -3,7 +3,7 @@ The validation schema for the models
 """
 from schema import And, Forbidden, Optional, Regex, Schema
 
-USER_SCHEMA = Schema({
+USER_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
@@ -15,7 +15,7 @@ USER_SCHEMA = Schema({
     "authentication": object
 })
 
-ADDRESS_SCHEMA = {
+ADDRESS_SCHEMA_VALIDATOR = {
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
@@ -27,7 +27,7 @@ ADDRESS_SCHEMA = {
     "lat_long": And(str, len)
 }
 
-AUTHENTICATION_SCHEMA = {
+AUTHENTICATION_SCHEMA_VALIDATOR = {
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),

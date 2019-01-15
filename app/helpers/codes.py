@@ -44,3 +44,10 @@ AUTH_OKAY = {
     "message": "Auth success",
     "description": "Move along!"
 }
+
+REGISTER_SUCCESS = {
+    "status_code": SUCCESS_STATUS_CODE,
+    "status": SUCCESS_STATUS,
+    "message": "User Successfully Registered",
+    "description": "You called the register endpoint. The user was registered. What else did you expect?"
+}

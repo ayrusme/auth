@@ -7,7 +7,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config.config import DB_URI
 from .schema import (Address, Base, Role, User, UserAuthentication,
-                             UserRole)
+                     UserRole)
 
 Session = scoped_session(sessionmaker())
 
@@ -18,8 +18,8 @@ try:
     _ = _engine.connect()
 except exc.DBAPIError:
     _engine = create_engine(DB_URI, {
-    "encoding": "utf-8"
-})
+        "encoding": "utf-8"
+    })
 Session.remove()
 Session.configure(bind=_engine, autoflush=False, expire_on_commit=False)
 Base.metadata.create_all(_engine)

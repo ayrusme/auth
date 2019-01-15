@@ -6,11 +6,11 @@ from copy import deepcopy
 
 from flask import abort, jsonify, request
 from flask.blueprints import Blueprint
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_refresh_token_required)
+from flask_jwt_extended import get_jwt_identity, jwt_refresh_token_required
 
-from helpers.codes import AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED
-from models.authentication import login
+from helpers.codes import (AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED,
+                           REGISTER_SUCCESS)
+from models.authentication import login, register_user
 
 auth_blueprint = Blueprint(
     'authentication_v1', __name__, url_prefix='/v1/auth')
@@ -41,8 +41,8 @@ def signup():
     Endpoint to allow users to signup
     """
     if hasattr(request, "json") and request.json is not None:
-
-
+        result = register_user(request.get_json())
+        
 
 @auth_blueprint.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required

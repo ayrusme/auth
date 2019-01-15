@@ -6,13 +6,13 @@ import uuid
 from datetime import datetime, timezone
 
 import sqlamp
-from sqlalchemy import (Column, ForeignKey, Index, Integer, Sequence, String,
-                        Text)
+from sqlalchemy import (Column, DateTime, ForeignKey, Index, Integer, Sequence,
+                        String, Text)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import deferred, relationship
+from sqlalchemy.orm import backref, deferred, relationship
+from sqlalchemy_utils import EmailType, PasswordType, UUIDType
 
-from sqlalchemy_utils import UUIDType, EmailType, PasswordType
-from helpers.helpers import CURRENT_TIME
+from app.helpers.helpers import CURRENT_TIME
 
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
 
@@ -54,29 +54,32 @@ class User(Base):
         Column(String(255), nullable=False)
     )
     email = Column(EmailType)
-    phone = Column(Integer, nullable=False)
-    addresses = relationship('addresses', backref='user', lazy=True)
-    authentication = relationship('user_auth', backref='user')
-    role = relationship('user_role', backref='user')
-    last_login = Column(Integer, nullable=False, default=0)
+    phone = Column(String(25), nullable=False)
+    addresses = relationship('Address', backref='user', lazy=True)
+    authentication = relationship('UserAuthentication', backref='user')
+    role = relationship('UserRole', backref='user')
+    last_login = Column(DateTime, nullable=False, default=0)
     created_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
-    def __init__(self, first_name, last_name, email,
-                 phone, addresses, last_login, created_at,
-                 updated_at):
+    def __init__(self, guid, first_name, last_name, email,
+                 phone, addresses, authentication, role, last_login, 
+                 created_at, updated_at):
+        self.guid = guid
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
         self.phone = phone
         self.last_login = last_login
         self.addresses = addresses
+        self.authentication = authentication
+        self.role = role
         self.created_at = created_at
         self.updated_at = updated_at
 
@@ -114,11 +117,11 @@ class UserAuthentication(Base):
         deprecated=['md5_crypt']
     ))
     created_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
@@ -168,11 +171,11 @@ class Address(Base):
     pin_code = Column(Integer, nullable=False)
     lat_long = Column(String(50), nullable=False)
     created_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
@@ -211,11 +214,11 @@ class Role(Base):
     role_name = Column(String(20), nullable=False)
     description = Column(String(20), nullable=False)
     created_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
@@ -250,11 +253,11 @@ class UserRole(Base):
     role_id = Column(UUIDType(binary=False), ForeignKey('roles.role_id'),
                      nullable=False)
     created_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
     updated_at = deferred(
-        Column(Integer, nullable=False, default=CURRENT_TIME()),
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults'
     )
 
