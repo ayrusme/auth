@@ -15,6 +15,7 @@ passlib = "*"
 pyodbc = "*"
 schema = "*"
 alembic = "*"
+pre-commit = "*"
 
 [dev-packages]
 autopep8 = "*"
