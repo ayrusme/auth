@@ -12,20 +12,20 @@ from flask_jwt_extended import (
 
 from helpers.codes import (
     AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED,
-    REGISTER_SUCCESS,
 )
 from models.authentication import login
 
-auth_blueprint = Blueprint(
+AUTH_BLUEPRINT = Blueprint(
     'authentication_v1', __name__, url_prefix='/v1/auth',
 )
 
 
-@auth_blueprint.route('/login', methods=['POST'])
+@AUTH_BLUEPRINT.route('/login', methods=['POST'])
 def login_user():
     """
     Login Endpoint
     """
+    response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
         username = request.json.get('username', None)
         password = request.json.get('password', None)
@@ -35,12 +35,11 @@ def login_user():
                 response = deepcopy(AUTH_OKAY)
                 response['access_token'] = auth_token
                 response['refresh_token'] = refresh_token
-                return jsonify(response)
-            return jsonify(NOT_AUTHENTICATED)
-    return jsonify(BAD_REQUEST)
+            response = NOT_AUTHENTICATED
+    return jsonify(response['payload']), response['status_code']
 
 
-@auth_blueprint.route('/refresh', methods=['POST'])
+@AUTH_BLUEPRINT.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh_token():
     """

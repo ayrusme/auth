@@ -1,40 +1,33 @@
 """
 This file takes care of the engine decalaration
 """
-from sqlalchemy import create_engine
-from sqlalchemy import event
-from sqlalchemy import exc
-from sqlalchemy import select
+from sqlalchemy import create_engine, event, exc, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import scoped_session
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 
-from app.config.config import DB_URI
-from app.helpers.codes import MUGGLE
-from app.helpers.codes import STORM_TROOPER
-from app.helpers.codes import VADER
+from config.config import DB_URI
+from helpers.codes import MUGGLE, STORM_TROOPER, VADER
+
+from . import Base, Role
 
 SESSION = scoped_session(sessionmaker())
 
-_ENGINE = create_engine(
-    DB_URI, {
-        "encoding": "utf-8",
-    },
-)
+_ENGINE = create_engine(DB_URI)
+
 try:
     _ = _ENGINE.connect()
 except exc.DBAPIError:
     _ENGINE = create_engine(
         DB_URI, {
-            "encoding": "utf-8",
-        },
+            "encoding": "utf-8"
+        }
     )
 SESSION.remove()
 SESSION.configure(bind=_ENGINE, autoflush=False, expire_on_commit=False)
 Base.metadata.create_all(_ENGINE)
 
 
-@event.listens_for(_engine, "engine_connect")
+@event.listens_for(_ENGINE, "engine_connect")
 def ping_connection(connection, branch):
     if branch:
         # "branch" refers to a sub-connection of a connection,
@@ -102,3 +95,50 @@ except IntegrityError as exp:
 except Exception as exp:
     print(exp)
     DB_SESSION.rollback()
+
+
+def find_record(model, session, filter_dict=None, first_only=True):
+    """
+    Finds the record by the filter given in a dictionary
+
+    PARAMETERS
+    ----------
+    model   :   str
+        Database table in which the operation takes place
+    session    :   sqlalchemy.orm.scoping.scoped_session
+        Database session to perform the operation
+    filter_dict   :   dict
+        Filter dict with column names as keys
+        and the intended value as value
+    first_only  :   boolean, defaults to True
+        Whether to return all the records or only the single
+        record (first record if there are multiple matches)
+
+    NOTE
+    ---------
+    Whilst using no filter_dict and passing first_only
+    as false, understand the implications of performance
+    """
+    records = None
+    if first_only:
+        if filter_dict:
+            records = session.query(
+                model).filter_by(
+                    **filter_dict
+                ).first()
+        else:
+            records = session.query(
+                model
+            ).first()
+    else:
+        if filter_dict:
+            records = session.query(
+                model
+            ).filter_by(
+                **filter_dict
+            ).all()
+        else:
+            records = session.query(
+                model
+            ).all()
+    return records, session

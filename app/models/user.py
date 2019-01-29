@@ -2,34 +2,49 @@
 This file contains the models for the user
 """
 import uuid
+from copy import deepcopy
 from datetime import datetime
 
-from helpers.codes import MUGGLE
+from database.engine import SESSION, find_record
+from helpers.codes import BAD_REQUEST, MUGGLE, REGISTER_SUCCESS
 
-from . import AUTHENTICATION_SCHEMA_VALIDATOR
-from . import Role
-from . import User
-from . import USER_SCHEMA_VALIDATOR
-from . import UserAuthentication
-from . import UserRole
+from . import (AUTHENTICATION_SCHEMA_VALIDATOR, USER_SCHEMA_VALIDATOR, User,
+               UserAuthentication, UserRole)
 
 
-def register_user(user_details):
+def register_user(user_details, role=MUGGLE):
     """
     Model for creating a new user
     """
-    result = None
+    result = deepcopy(BAD_REQUEST)
     # Validate the incoming details
     if AUTHENTICATION_SCHEMA_VALIDATOR.is_valid(user_details):
-        # register user with just the username and password
+        session = SESSION()
+        # TODO Add check to see if user exists
+        user_id = uuid.uuid4()
+        # create user auth
         user_authentication = UserAuthentication(
             **{
                 "guid": uuid.uuid4(),
-                "user_id": uuid.uuid4(),
+                "user_id": user_id,
                 "created_at": datetime.now(),
                 "updated_at": datetime.now(),
             }, **user_details
         )
-        # assign role as muggle
-        user_role = Role(**MUGGLE)
+        # assign role
+        user_role = UserRole(**{
+            "guid": uuid.uuid4(),
+            "user_id": user_id,
+            "role_id": role['role_id']
+        })
+        # create user object
+        user = User(**{
+            "guid": user_id,
+            "phone": user_details['username'],
+            "authentication": [user_authentication],
+            "role": [user_role]
+        })
+        session.add(user)
+        session.commit()
+        result = REGISTER_SUCCESS
     return result

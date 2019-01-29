@@ -16,7 +16,7 @@ STORM_TROOPER = {
 
 MUGGLE = {
     "role_id": "649a4be4673d52beb64a6a7fed720bdf",
-    "role_name": "MUGGLES",
+    "role_name": "MUGGLE",
     "description": "Life's a struggle when you're a muggle",
 }
 
@@ -44,28 +44,36 @@ BAD_REQUEST = {
 
 NOT_AUTHENTICATED = {
     "status_code": NOT_AUTHENTICATED_STATUS_CODE,
-    "status": ERROR_STATUS,
-    "message": "Not Authenticated",
-    "description": "Bad username or password",
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "Not Authenticated",
+        "description": "Bad username or password"
+    }
 }
 
 NOT_AUTHORIZED = {
     "status_code": NOT_AUTHORIZED_STATUS_CODE,
-    "status": ERROR_STATUS,
-    "message": "Unauthorized",
-    "description": "These are not the droids you're looking for",
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "Unauthorized",
+        "description": "These are not the droids you're looking for"
+    }
 }
 
 AUTH_OKAY = {
     "status_code": SUCCESS_STATUS_CODE,
-    "status": SUCCESS_STATUS,
-    "message": "Auth success",
-    "description": "Move along!",
+    "payload": {
+        "status": SUCCESS_STATUS,
+        "message": "Auth success",
+        "description": "Move along!"
+    }
 }
 
 REGISTER_SUCCESS = {
     "status_code": SUCCESS_STATUS_CODE,
-    "status": SUCCESS_STATUS,
-    "message": "User Successfully Registered",
-    "description": "You called the register endpoint. The user was registered.",
+    "payload": {
+        "status": SUCCESS_STATUS,
+        "message": "User Successfully Registered",
+        "description": "You called the register endpoint. The user was registered."
+    }
 }

@@ -37,10 +37,6 @@ class User(Base):
     --------------------------------------
     guid : uuid
         Unique ID assigned to the consumer (PK)
-    username : String
-        The username of the consumer
-    password : Hash(String)
-        The password of the consumer, hashed and stored
     first_name : String
         First Name of the consumer
     last_name : String
@@ -70,7 +66,7 @@ class User(Base):
     addresses = relationship('Address', lazy=True)
     authentication = relationship('UserAuthentication', backref='user')
     role = relationship('UserRole', backref='user')
-    last_login = Column(DateTime, nullable=False, default=0)
+    last_login = Column(DateTime)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults',
