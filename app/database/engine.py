@@ -1,28 +1,37 @@
 """
 This file takes care of the engine decalaration
 """
+from sqlalchemy import create_engine
+from sqlalchemy import event
+from sqlalchemy import exc
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import sessionmaker
 
-from sqlalchemy import create_engine, event, exc, select
-from sqlalchemy.orm import scoped_session, sessionmaker
+from app.config.config import DB_URI
+from app.helpers.codes import MUGGLE
+from app.helpers.codes import STORM_TROOPER
+from app.helpers.codes import VADER
 
-from config.config import DB_URI
-from .schema import (Address, Base, Role, User, UserAuthentication,
-                     UserRole)
+SESSION = scoped_session(sessionmaker())
 
-Session = scoped_session(sessionmaker())
-
-_engine = create_engine(DB_URI, {
-    "encoding": "utf-8"
-})
+_ENGINE = create_engine(
+    DB_URI, {
+        "encoding": "utf-8",
+    },
+)
 try:
-    _ = _engine.connect()
+    _ = _ENGINE.connect()
 except exc.DBAPIError:
-    _engine = create_engine(DB_URI, {
-        "encoding": "utf-8"
-    })
-Session.remove()
-Session.configure(bind=_engine, autoflush=False, expire_on_commit=False)
-Base.metadata.create_all(_engine)
+    _ENGINE = create_engine(
+        DB_URI, {
+            "encoding": "utf-8",
+        },
+    )
+SESSION.remove()
+SESSION.configure(bind=_ENGINE, autoflush=False, expire_on_commit=False)
+Base.metadata.create_all(_ENGINE)
 
 
 @event.listens_for(_engine, "engine_connect")
@@ -59,3 +68,37 @@ def ping_connection(connection, branch):
     finally:
         # restore "close with result"
         connection.should_close_with_result = save_should_close_with_result
+
+
+# INIT ROLES
+DB_SESSION = SESSION()
+SUPER_ADMIN_ROLE = Role(**VADER)
+ADMIN_ROLE = Role(**STORM_TROOPER)
+USER_ROLE = Role(**MUGGLE)
+
+try:
+    RESULT = DB_SESSION.query(Role).filter(
+        Role.role_id == SUPER_ADMIN_ROLE.role_id,
+    ).first()
+    if not RESULT:
+        print("Adding VADER")
+        DB_SESSION.add(SUPER_ADMIN_ROLE)
+    RESULT = DB_SESSION.query(Role).filter(
+        Role.role_id == USER_ROLE.role_id,
+    ).first()
+    if not RESULT:
+        print("Adding Muggles")
+        DB_SESSION.add(USER_ROLE)
+    RESULT = DB_SESSION.query(Role).filter(
+        Role.role_id == ADMIN_ROLE.role_id,
+    ).first()
+    if not RESULT:
+        print("Adding Storm Troopers to manage the muggles")
+        DB_SESSION.add(ADMIN_ROLE)
+    DB_SESSION.commit()
+except IntegrityError as exp:
+    print(exp)
+    print("Seems like the roles are added")
+except Exception as exp:
+    print(exp)
+    DB_SESSION.rollback()

@@ -1,18 +1,30 @@
 """
 This file contains the schema for all the tables used in this project
 """
-
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 
 import sqlamp
-from sqlalchemy import (Column, DateTime, ForeignKey, Index, Integer, Sequence,
-                        String, Text)
+from helpers.codes import MUGGLE
+from helpers.codes import STORM_TROOPER
+from helpers.codes import VADER
+from helpers.helpers import CURRENT_TIME
+from sqlalchemy import Column
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Index
+from sqlalchemy import Integer
+from sqlalchemy import Sequence
+from sqlalchemy import String
+from sqlalchemy import Text
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import backref, deferred, relationship
-from sqlalchemy_utils import EmailType, PasswordType, UUIDType
-
-from app.helpers.helpers import CURRENT_TIME
+from sqlalchemy.orm import backref
+from sqlalchemy.orm import deferred
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from sqlalchemy_utils import EmailType
+from sqlalchemy_utils import PasswordType
+from sqlalchemy_utils import UUIDType
 
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
 
@@ -23,19 +35,19 @@ class User(Base):
 
     USER MODEL
     --------------------------------------
-    guid : uuid 
+    guid : uuid
         Unique ID assigned to the consumer (PK)
     username : String
         The username of the consumer
     password : Hash(String)
         The password of the consumer, hashed and stored
-    first_name : String 
+    first_name : String
         First Name of the consumer
-    last_name : String 
+    last_name : String
         Last Name of the consumer
     email : String
         Email address of the consumer
-    phone : Integer 
+    phone : Integer
         Phone number of the consumer
     last_login : Integer
         The timestamp of the last logged in time of the user
@@ -48,40 +60,28 @@ class User(Base):
 
     guid = Column(UUIDType(binary=False), primary_key=True)
     first_name = deferred(
-        Column(String(255), nullable=False)
+        Column(String(255)),
     )
     last_name = deferred(
-        Column(String(255), nullable=False)
+        Column(String(255)),
     )
     email = Column(EmailType)
     phone = Column(String(25), nullable=False)
-    addresses = relationship('Address', backref='user', lazy=True)
+    addresses = relationship('Address', lazy=True)
     authentication = relationship('UserAuthentication', backref='user')
     role = relationship('UserRole', backref='user')
     last_login = Column(DateTime, nullable=False, default=0)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        group='defaults',
     )
     updated_at = deferred(
-        Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
     )
-
-    def __init__(self, guid, first_name, last_name, email,
-                 phone, addresses, authentication, role, last_login, 
-                 created_at, updated_at):
-        self.guid = guid
-        self.first_name = first_name
-        self.last_name = last_name
-        self.email = email
-        self.phone = phone
-        self.last_login = last_login
-        self.addresses = addresses
-        self.authentication = authentication
-        self.role = role
-        self.created_at = created_at
-        self.updated_at = updated_at
 
 
 class UserAuthentication(Base):
@@ -112,27 +112,21 @@ class UserAuthentication(Base):
     password = Column(PasswordType(
         schemes=[
             'pbkdf2_sha512',
-            'md5_crypt'
+            'md5_crypt',
         ],
-        deprecated=['md5_crypt']
+        deprecated=['md5_crypt'],
     ))
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        group='defaults',
     )
     updated_at = deferred(
-        Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
     )
-
-    def __init__(self, guid, user_id, username,
-                 password, created_at, updated_at):
-        self.guid = guid
-        self.user_id = user_id
-        self.username = username
-        self.password = password
-        self.created_at = created_at
-        self.updated_at = updated_at
 
 
 class Address(Base):
@@ -141,7 +135,7 @@ class Address(Base):
 
     ADDRESS MODEL
     -----------------------------------
-    guid: String 
+    guid: String
         Unique ID assigned to the address (PK)
     user_id: String
         The user ID for which the address is stored (FK)
@@ -162,8 +156,10 @@ class Address(Base):
     __tablename__ = "addresses"
 
     guid = Column(UUIDType(binary=False), primary_key=True)
-    user_id = Column(UUIDType(binary=False), ForeignKey('user.guid'),
-                     nullable=False)
+    user_id = Column(
+        UUIDType(binary=False), ForeignKey('user.guid'),
+        nullable=False,
+    )
     address_line1 = Column(String(120), nullable=False)
     address_line2 = Column(String(120), nullable=True)
     city = Column(String(30), nullable=False)
@@ -172,26 +168,15 @@ class Address(Base):
     lat_long = Column(String(50), nullable=False)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        group='defaults',
     )
     updated_at = deferred(
-        Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
     )
-
-    def __init__(self, guid, user_id, address_line1,
-                 address_line2, city, country, pin_code,
-                 lat_long, created_at, updated_at):
-        self.guid = guid
-        self.user_id = user_id
-        self.address_line1 = address_line1
-        self.address_line2 = address_line2
-        self.city = city
-        self.country = country
-        self.pin_code = pin_code
-        self.lat_long = lat_long
-        self.created_at = created_at
-        self.updated_at = updated_at
 
 
 class Role(Base):
@@ -201,7 +186,7 @@ class Role(Base):
     ROLE MODEL
     ----------------------------------
     role_id: Integer
-        The ID for the particular role  
+        The ID for the particular role
     role_name: String
         The name assigned to the particular role
     description: String
@@ -212,23 +197,23 @@ class Role(Base):
 
     role_id = Column(UUIDType(binary=False), primary_key=True)
     role_name = Column(String(20), nullable=False)
-    description = Column(String(20), nullable=False)
+    description = Column(String(100), nullable=False)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        group='defaults',
     )
     updated_at = deferred(
-        Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
     )
 
-    def __init__(self, role_id, role_name,
-                 description, created_at, updated_at):
-        self.role_id = role_id
-        self.role_name = role_name
-        self.description = description
-        self.created_at = created_at
-        self.updated_at = updated_at
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+# Add few roles
 
 
 class UserRole(Base):
@@ -248,23 +233,22 @@ class UserRole(Base):
     __tablename__ = 'user_role'
 
     guid = Column(UUIDType(binary=False), primary_key=True)
-    user_id = Column(UUIDType(binary=False), ForeignKey('user.guid'),
-                     nullable=False)
-    role_id = Column(UUIDType(binary=False), ForeignKey('roles.role_id'),
-                     nullable=False)
+    user_id = Column(
+        UUIDType(binary=False), ForeignKey('user.guid'),
+        nullable=False,
+    )
+    role_id = Column(
+        UUIDType(binary=False), ForeignKey('roles.role_id'),
+        nullable=False,
+    )
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        group='defaults',
     )
     updated_at = deferred(
-        Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults'
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
     )
-
-    def __init__(self, guid, user_id,
-                 role_id, created_at, updated_at):
-        self.guid = guid
-        self.user_id = user_id
-        self.role_id = role_id
-        self.created_at = created_at
-        self.updated_at = updated_at

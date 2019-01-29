@@ -3,23 +3,27 @@ The file to hold the configuration for the project
 """
 import json
 
-with open ('config.json') as file:
-    data = json.load(file)
-    
+with open('config.json') as file:
+    DATA = json.load(file)
+
     # read server configuration
-    SERVER_URL = data['SERVER']['URL'] if data['SERVER']['URL'] else "127.0.0.1"
-    SERVER_PORT =  data['SERVER']['PORT'] if data['SERVER']['PORT'] else 8001
+    SERVER_URL = DATA['SERVER']['URL'] if DATA['SERVER']['URL'] else "127.0.0.1"
+    SERVER_PORT = DATA['SERVER']['PORT'] if DATA['SERVER']['PORT'] else 8001
 
     # read database configuration
-    DATABASE_TYPE = data['DATABASE']['TYPE'].lower() if data['DATABASE']['TYPE'] else "mysql"
-    DATABASE_NAME = data['DATABASE']['NAME'].lower() if data['DATABASE']['NAME'] else "astrix"
-    DATABASE_DRIVER = data['DATABASE']['DRIVER'].lower() if data['DATABASE']['DRIVER'] else "pymysql"
-    HOST = data['DATABASE']['HOST'].lower() if data['DATABASE']['HOST'] else "localhost"
-    PORT = data['DATABASE']['PORT'] if data['DATABASE']['PORT'] else "3306"
-    USERNAME = data['DATABASE']['USERNAME'] if data['DATABASE']['USERNAME'] else "root"
-    PASSWORD = data['DATABASE']['PASSWORD'] if data['DATABASE']['PASSWORD'] else "root"
+    DATABASE_TYPE = DATA['DATABASE']['TYPE'].lower(
+    ) if DATA['DATABASE']['TYPE'] else "mysql"
+    DATABASE_NAME = DATA['DATABASE']['NAME'].lower(
+    ) if DATA['DATABASE']['NAME'] else "astrix"
+    DATABASE_DRIVER = DATA['DATABASE']['DRIVER'].lower(
+    ) if DATA['DATABASE']['DRIVER'] else "pymysql"
+    HOST = DATA['DATABASE']['HOST'].lower(
+    ) if DATA['DATABASE']['HOST'] else "localhost"
+    PORT = DATA['DATABASE']['PORT'] if DATA['DATABASE']['PORT'] else "3306"
+    USERNAME = DATA['DATABASE']['USERNAME'] if DATA['DATABASE']['USERNAME'] else "root"
+    PASSWORD = DATA['DATABASE']['PASSWORD'] if DATA['DATABASE']['PASSWORD'] else "root"
 
-    #TODO If password exists, add password to URI
+    # TODO If password exists, add password to URI
     # construct the URI
     DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}".format(
         TYPE=DATABASE_TYPE,
@@ -27,8 +31,8 @@ with open ('config.json') as file:
         USERNAME=USERNAME,
         HOST=HOST,
         PORT=PORT,
-        NAME=DATABASE_NAME
+        NAME=DATABASE_NAME,
     )
 
-    LOG_LEVEL = data['LOG']['LEVEL'] if data['LOG']['LEVEL'] else "INFO"
-    LOG_FILE = data['LOG']['FILE'] if data['LOG']['FILE'] else "logs.log"
+    LOG_LEVEL = DATA['LOG']['LEVEL'] if DATA['LOG']['LEVEL'] else "INFO"
+    LOG_FILE = DATA['LOG']['FILE'] if DATA['LOG']['FILE'] else "logs.log"

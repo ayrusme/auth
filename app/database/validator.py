@@ -1,7 +1,10 @@
 """
-The validation schema for the models 
+The validation schema for the models
 """
-from schema import And, Forbidden, Optional, Regex, Schema
+from schema import And
+from schema import Forbidden
+from schema import Regex
+from schema import Schema
 
 USER_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
@@ -12,10 +15,10 @@ USER_SCHEMA_VALIDATOR = Schema({
     "email": Regex(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"),
     "phone": Regex(r"[6789]{1}[0-9]{9}"),
     "addresses": list,
-    "authentication": object
+    "authentication": object,
 })
 
-ADDRESS_SCHEMA_VALIDATOR = {
+ADDRESS_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
@@ -24,13 +27,13 @@ ADDRESS_SCHEMA_VALIDATOR = {
     "city": And(str, len),
     "country": And(str, len),
     "pin_code": int,
-    "lat_long": And(str, len)
-}
+    "lat_long": And(str, len),
+})
 
-AUTHENTICATION_SCHEMA_VALIDATOR = {
+AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
     "username": And(str, len),
-    "password": And(str, len)
-}
+    "password": And(str, len),
+})
