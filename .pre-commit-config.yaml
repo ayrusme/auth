@@ -11,10 +11,6 @@ repos:
     -   id: name-tests-test
     -   id: requirements-txt-fixer
     -   id: flake8
--   repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v1.4
-    hooks:
-    -   id: autopep8
 -   repo: https://github.com/pre-commit/pre-commit
     rev: v1.11.2
     hooks:
@@ -23,15 +19,7 @@ repos:
     rev: v1.11.0
     hooks:
     -   id: pyupgrade
--   repo: https://github.com/asottile/reorder_python_imports
-    rev: v1.3.0
-    hooks:
-    -   id: reorder-python-imports
-        language_version: python3
 -   repo: https://github.com/asottile/add-trailing-comma
     rev: v0.7.1
     hooks:
     -   id: add-trailing-comma
--   repo: meta
-    hooks:
-    -   id: check-useless-excludes
