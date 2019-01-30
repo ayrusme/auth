@@ -5,14 +5,10 @@ from copy import deepcopy
 
 from flask import abort, jsonify, request
 from flask.blueprints import Blueprint
-from flask_jwt_extended import (
-    create_access_token, get_jwt_identity,
-    jwt_refresh_token_required,
-)
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_refresh_token_required)
 
-from helpers.codes import (
-    AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED,
-)
+from helpers.codes import BAD_REQUEST
 from models.authentication import login
 
 AUTH_BLUEPRINT = Blueprint(
@@ -30,12 +26,7 @@ def login_user():
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         if username is not None and password is not None:
-            result, auth_token, refresh_token = login(username, password)
-            if result:
-                response = deepcopy(AUTH_OKAY)
-                response['access_token'] = auth_token
-                response['refresh_token'] = refresh_token
-            response = NOT_AUTHENTICATED
+            response = login(username, password)
     return jsonify(response['payload']), response['status_code']
 
 

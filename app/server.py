@@ -8,6 +8,7 @@ from auth.auth_codes import JWT_SECRET
 from config.config import SERVER_PORT, SERVER_URL
 from controllers.authentication import AUTH_BLUEPRINT
 from controllers.user import USER_BLUEPRINT
+from flask_jwt_extended import JWTManager
 
 # Create the server
 APP = Flask(__name__)
@@ -15,6 +16,7 @@ APP = Flask(__name__)
 CORS(APP)
 
 APP.config['JWT_SECRET_KEY'] = JWT_SECRET
+JWT = JWTManager(APP)
 
 # Register blueprints for controllers
 APP.register_blueprint(USER_BLUEPRINT)
