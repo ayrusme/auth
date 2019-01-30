@@ -31,6 +31,7 @@ SUCCESS_STATUS_CODE = 200
 BAD_REQUEST_STATUS_CODE = 400
 NOT_AUTHENTICATED_STATUS_CODE = 401
 NOT_AUTHORIZED_STATUS_CODE = 403
+CONFLICT_STATUS_CODE = 409
 
 # Response packets
 BAD_REQUEST = {
@@ -75,5 +76,14 @@ REGISTER_SUCCESS = {
         "status": SUCCESS_STATUS,
         "message": "User Successfully Registered",
         "description": "You called the register endpoint. The user was registered."
+    }
+}
+
+ENTITY_EXISTS = {
+    "status_code": CONFLICT_STATUS_CODE,
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "The entity already exists!",
+        "description": "The entity exists! We cannot create an entity that already exists!"
     }
 }
