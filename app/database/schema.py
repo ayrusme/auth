@@ -79,6 +79,20 @@ class User(Base):
         group='defaults',
     )
 
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "guid": self.guid,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "email": self.email,
+            "phone": self.phone,
+            "addresses": [item.serialize for item in self.addresses]
+        }
+
 
 class UserAuthentication(Base):
 
@@ -173,6 +187,20 @@ class Address(Base):
         ),
         group='defaults',
     )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "address_line1": self.address_line1,
+            "address_line2": self.address_line2,
+            "city": self.city,
+            "country": self.country,
+            "pin_code": self.pin_code,
+            "lat_long": self.lat_long
+        }
 
 
 class Role(Base):

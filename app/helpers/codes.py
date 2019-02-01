@@ -20,7 +20,6 @@ MUGGLE = {
     "description": "Life's a struggle when you're a muggle",
 }
 
-ROUTE_VERSION_V1 = "version1"
 
 # Status Messages
 ERROR_STATUS = "error"
@@ -31,9 +30,34 @@ SUCCESS_STATUS_CODE = 200
 BAD_REQUEST_STATUS_CODE = 400
 NOT_AUTHENTICATED_STATUS_CODE = 401
 NOT_AUTHORIZED_STATUS_CODE = 403
+NOT_FOUND_STATUS_CODE = 404
 CONFLICT_STATUS_CODE = 409
 
 # Response packets
+NOT_IMPLEMENTED = {
+    "status_code": BAD_REQUEST_STATUS_CODE,
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "This method has not been implemented yet!",
+        "description": "Please let me know if it is needed"
+    }
+}
+
+NOT_FOUND = {
+    "status_code": NOT_FOUND_STATUS_CODE,
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "I am not able to find this",
+        "description": "Check the request and try again!"
+    }
+}
+
+RECORD_FOUND = {
+    "status_code": SUCCESS_STATUS_CODE,
+    "payload": {
+    }
+}
+
 BAD_REQUEST = {
     "status_code": BAD_REQUEST_STATUS_CODE,
     "payload": {

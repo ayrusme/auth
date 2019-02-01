@@ -6,7 +6,7 @@ from copy import deepcopy
 from flask_jwt_extended import create_access_token, create_refresh_token
 
 from database.engine import SESSION, find_record
-from database.schema import UserAuthentication
+from database.schema import UserAuthentication, User
 from helpers.codes import AUTH_OKAY, NOT_AUTHENTICATED
 
 
@@ -14,12 +14,16 @@ def login(username, password):
     """
     Model for the login controller
     """
-    result = deepcopy(NOT_AUTHENTICATED)
+    response = deepcopy(NOT_AUTHENTICATED)
     session = SESSION()
-    response, session = find_record(UserAuthentication, session, {"username": username})
+    # result, session = find_record(UserAuthentication, session, {"username": username})
+    user, auth = session.query(User, UserAuthentication).filter(
+        UserAuthentication.username == username
+        ).first()
     session.flush()
-    if response and response.password == password:
-        result = deepcopy(AUTH_OKAY)
-        result['payload']['access_token'] = create_access_token(identity=username)
-        result['payload']['refresh_token'] = create_refresh_token(identity=username)
-    return result
+    if user and auth and auth.password == password:
+        response = deepcopy(AUTH_OKAY)
+        response['payload']['user'] = user.serialize
+        response['payload']['access_token'] = create_access_token(identity=user.guid)
+        response['payload']['refresh_token'] = create_refresh_token(identity=user.guid)
+    return response

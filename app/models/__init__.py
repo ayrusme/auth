@@ -9,3 +9,4 @@ from database.schema import UserRole
 from database.validator import ADDRESS_SCHEMA_VALIDATOR
 from database.validator import AUTHENTICATION_SCHEMA_VALIDATOR
 from database.validator import USER_SCHEMA_VALIDATOR
+from database.validator import USER_UPDATE_VALIDATOR

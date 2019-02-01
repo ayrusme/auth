@@ -1,21 +1,31 @@
 """
 The validation schema for the models
 """
-from schema import And
-from schema import Forbidden
-from schema import Regex
-from schema import Schema
+from schema import And, Forbidden, Regex, Schema, Optional
 
 USER_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
-    "first_name": And(str, len),
-    "last_name": And(str, len),
-    "email": Regex(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"),
+    Optional("first_name"): And(str, len),
+    Optional("last_name"): And(str, len),
+    Optional("email"): Regex(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"),
     "phone": Regex(r"[6789]{1}[0-9]{9}"),
-    "addresses": list,
+    Optional("addresses"): list,
     "authentication": object,
+})
+
+USER_UPDATE_VALIDATOR = Schema({
+    Optional("guid"): And(str, len),
+    Forbidden("created_at"): And(str, len),
+    Forbidden("updated_at"): And(str, len),
+    Optional("first_name"): And(str, len),
+    Optional("last_name"): And(str, len),
+    Optional("email"): Regex(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"),
+    Forbidden("phone"): Regex(r"[6789]{1}[0-9]{9}"),
+    Optional("addresses"): list,
+    Optional("authentication"): object,
+    Optional("role"): list
 })
 
 ADDRESS_SCHEMA_VALIDATOR = Schema({
