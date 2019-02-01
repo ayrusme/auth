@@ -13,22 +13,6 @@ from flask_jwt_extended import (
 from auth_codes import JWT_ALGORITHM, JWT_SECRET
 
 
-def encrypt(payload):
-    """
-    Function to encrypt the given payload
-    """
-    # TODO Add encryption technique
-    pass
-
-
-def decrypt(payload):
-    """
-    Function to decrypt the given payload
-    """
-    # TODO Add decryption technique
-    pass
-
-
 def auth_wrapper(f):
     """
     Auth wrapper for Astrix Backend
