@@ -10,6 +10,9 @@ from models.user import register_user, get_user
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/')
 
 
+# CREATE ENDPOINTS
+
+
 @USER_BLUEPRINT.route('/create-user', methods=['POST'])
 def signup():
     """
@@ -43,17 +46,7 @@ def signup_admin():
     return jsonify(response['payload']), response['status_code']
 
 
-@USER_BLUEPRINT.route('/modify-role', methods=['PUT'])
-@jwt_required
-def add_role():
-    """
-    Endpoint to allow users to modify roles
-    """
-    response = deepcopy(BAD_REQUEST)
-    if hasattr(request, "json") and request.json is not None:
-        #TODO
-        response = deepcopy(BAD_REQUEST)
-    return jsonify(response['payload']), response['status_code']
+# READ ENDPOINTS
 
 
 @USER_BLUEPRINT.route('/user', methods=["GET"])
@@ -63,8 +56,22 @@ def get_self():
     Endpoint to get the current user information
     """
     user_id = get_jwt_identity()
-    print(user_id)
     response = get_user({
         "guid": user_id
     })
+    return jsonify(response['payload']), response['status_code']
+
+
+# MODIFY ENDPOINTS
+
+
+@USER_BLUEPRINT.route('/modify-role', methods=['PUT'])
+@jwt_required
+def add_role():
+    """
+    Endpoint to allow users to modify roles
+    """
+    response = deepcopy(BAD_REQUEST)
+    if hasattr(request, "json") and request.json is not None:
+        response = deepcopy(BAD_REQUEST)
     return jsonify(response['payload']), response['status_code']

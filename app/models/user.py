@@ -16,6 +16,13 @@ from . import (AUTHENTICATION_SCHEMA_VALIDATOR, USER_SCHEMA_VALIDATOR,
 def register_user(user_details, role=MUGGLE):
     """
     Model for creating a new user
+
+    Params
+    ---------------
+    user_details: dict
+        The details of the user, enough to pass the AUTH SCHEMA
+    role: dict
+        An optional parameter defining the role of the user
     """
     response = deepcopy(BAD_REQUEST)
     # Validate the incoming details
@@ -74,3 +81,14 @@ def get_user(user_details):
             response['payload'] = result.serialize
         session.close()
     return response
+
+
+def modify_user(user_details):
+    """
+    Function to modify the user details for a particular user
+
+    Params
+    --------------
+    Returns
+    --------------
+    """

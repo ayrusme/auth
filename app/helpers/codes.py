@@ -72,7 +72,16 @@ NOT_AUTHENTICATED = {
     "payload": {
         "status": ERROR_STATUS,
         "message": "Not Authenticated",
-        "description": "Bad username or password"
+        "description": "You provided a bad username or password"
+    }
+}
+
+TOKEN_ERROR = {
+    "status_code": NOT_AUTHENTICATED_STATUS_CODE,
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "Token Trouble",
+        "description": "The token is bad, boy!"
     }
 }
 

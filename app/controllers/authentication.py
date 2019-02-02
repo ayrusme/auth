@@ -2,13 +2,15 @@
 The controllers for the authentication
 """
 from copy import deepcopy
+from time import time
 
 from flask import abort, jsonify, request
 from flask.blueprints import Blueprint
 from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_refresh_token_required)
 
-from helpers.codes import BAD_REQUEST
+from auth.auth_codes import EXPIRY_DURATION
+from helpers.codes import AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED, TOKEN_ERROR
 from models.authentication import login
 
 AUTH_BLUEPRINT = Blueprint(
@@ -30,7 +32,7 @@ def login_user():
     return jsonify(response['payload']), response['status_code']
 
 
-@AUTH_BLUEPRINT.route('/refresh', methods=['POST'])
+@AUTH_BLUEPRINT.route('/refresh', methods=['GET'])
 @jwt_refresh_token_required
 def refresh_token():
     """
@@ -40,5 +42,10 @@ def refresh_token():
     if current_user is None:
         return abort(401)
     response = deepcopy(AUTH_OKAY)
-    response['access_token'] = create_access_token(identity=current_user)
-    return jsonify(response), 200
+    response['payload']['access_token'] = create_access_token(
+        identity=current_user,
+        expires_delta=EXPIRY_DURATION
+    )
+    response['payload']['expires_in'] = EXPIRY_DURATION.seconds
+    response['payload']['not_before'] = int(time() + EXPIRY_DURATION.seconds)
+    return jsonify(response['payload']), response['status_code']

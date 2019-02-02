@@ -3,14 +3,13 @@ This file holds the authentication layer for all incoming requests
 """
 from functools import wraps
 
-from flask import abort, request
-from flask_jwt_extended import (
-    create_access_token, create_refresh_token,
-    get_jwt_identity, jwt_refresh_token_required,
-    jwt_required,
-)
+from flask import abort, jsonify, request
+from flask_jwt_extended import (create_access_token, create_refresh_token,
+                                get_jwt_identity, jwt_refresh_token_required,
+                                jwt_required)
 
 from auth_codes import JWT_ALGORITHM, JWT_SECRET
+from helpers.codes import TOKEN_ERROR
 
 
 def auth_wrapper(f):
