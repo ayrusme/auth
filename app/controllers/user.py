@@ -13,7 +13,7 @@ USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/')
 # CREATE ENDPOINTS
 
 
-@USER_BLUEPRINT.route('/create-user', methods=['POST'])
+@USER_BLUEPRINT.route('/create-rebel', methods=['POST'])
 def signup():
     """
     Endpoint to allow users to signup

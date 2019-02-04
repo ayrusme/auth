@@ -2,22 +2,26 @@
 This file contains all static references
 """
 # Roles
+VADER_ROLE_ID = "8a3aba91c925588b90ecd2cd58f73c57"
+TROOPER_ROLE_ID = "5ab57aa83e9253c5ab198099ccd7627a"
+REBEL_ROLE_ID = "649a4be4673d52beb64a6a7fed720bdf"
+
 VADER = {
-    "role_id": "8a3aba91c925588b90ecd2cd58f73c57",
+    "role_id": VADER_ROLE_ID,
     "role_name": "VADER",
     "description": "If only you knew the power of the dark side!",
 }
 
 STORM_TROOPER = {
-    "role_id": "5ab57aa83e9253c5ab198099ccd7627a",
+    "role_id": TROOPER_ROLE_ID,
     "role_name": "STORM_TROOPER",
     "description": "These aren't the roles you're looking for!",
 }
 
-MUGGLE = {
-    "role_id": "649a4be4673d52beb64a6a7fed720bdf",
-    "role_name": "MUGGLE",
-    "description": "Life's a struggle when you're a muggle",
+REBEL = {
+    "role_id": REBEL_ROLE_ID,
+    "role_name": "REBEL",
+    "description": "The rebel scum are at tantooine!",
 }
 
 

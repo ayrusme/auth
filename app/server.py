@@ -3,12 +3,13 @@ The file to start the server for Project Astrix
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
 from auth.auth_codes import JWT_SECRET
 from config.config import SERVER_PORT, SERVER_URL
 from controllers.authentication import AUTH_BLUEPRINT
 from controllers.user import USER_BLUEPRINT
-from flask_jwt_extended import JWTManager
+from helpers.codes import TOKEN_ERROR
 
 # Create the server
 APP = Flask(__name__)
@@ -29,6 +30,16 @@ def homepage():
     Customary PING route
     """
     return jsonify({'status': 'alive'})
+
+
+@JWT.unauthorized_loader
+def unauthorized(token):
+    return jsonify(TOKEN_ERROR['payload']), TOKEN_ERROR['status_code']
+
+
+@JWT.expired_token_loader
+def unauthorized(token):
+    return jsonify(TOKEN_ERROR['payload']), TOKEN_ERROR['status_code']
 
 
 # Start the server!

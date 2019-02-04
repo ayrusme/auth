@@ -5,7 +5,7 @@ import uuid
 from datetime import datetime
 
 import sqlamp
-from helpers.codes import MUGGLE
+from helpers.codes import REBEL
 from helpers.codes import STORM_TROOPER
 from helpers.codes import VADER
 from helpers.helpers import CURRENT_TIME

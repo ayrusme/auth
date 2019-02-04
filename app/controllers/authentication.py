@@ -32,7 +32,7 @@ def login_user():
     return jsonify(response['payload']), response['status_code']
 
 
-@AUTH_BLUEPRINT.route('/refresh', methods=['GET'])
+@AUTH_BLUEPRINT.route('/refresh', methods=['POST'])
 @jwt_refresh_token_required
 def refresh_token():
     """

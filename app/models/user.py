@@ -6,14 +6,14 @@ from copy import deepcopy
 from datetime import datetime
 
 from database.engine import SESSION, find_record
-from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, MUGGLE, NOT_FOUND,
+from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, REBEL, NOT_FOUND,
                            REGISTER_SUCCESS, RECORD_FOUND)
 
 from . import (AUTHENTICATION_SCHEMA_VALIDATOR, USER_SCHEMA_VALIDATOR,
                USER_UPDATE_VALIDATOR, User, UserAuthentication, UserRole)
 
 
-def register_user(user_details, role=MUGGLE):
+def register_user(user_details, role=REBEL):
     """
     Model for creating a new user
 

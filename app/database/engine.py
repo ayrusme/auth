@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config.config import DB_URI
-from helpers.codes import MUGGLE, STORM_TROOPER, VADER
+from helpers.codes import REBEL, STORM_TROOPER, VADER
 
 from . import Base, Role
 
@@ -67,7 +67,7 @@ def ping_connection(connection, branch):
 DB_SESSION = SESSION()
 SUPER_ADMIN_ROLE = Role(**VADER)
 ADMIN_ROLE = Role(**STORM_TROOPER)
-USER_ROLE = Role(**MUGGLE)
+USER_ROLE = Role(**REBEL)
 
 try:
     RESULT = DB_SESSION.query(Role).filter(
@@ -80,13 +80,13 @@ try:
         Role.role_id == USER_ROLE.role_id,
     ).first()
     if not RESULT:
-        print("Adding Muggles")
+        print("Adding Rebels")
         DB_SESSION.add(USER_ROLE)
     RESULT = DB_SESSION.query(Role).filter(
         Role.role_id == ADMIN_ROLE.role_id,
     ).first()
     if not RESULT:
-        print("Adding Storm Troopers to manage the muggles")
+        print("Adding Storm Troopers to manage the Rebels")
         DB_SESSION.add(ADMIN_ROLE)
     DB_SESSION.commit()
 except IntegrityError as exp:
