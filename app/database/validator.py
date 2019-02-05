@@ -33,7 +33,7 @@ ADDRESS_SCHEMA_VALIDATOR = Schema({
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
     "address_line1": And(str, len),
-    "address_line2": And(str, len),
+    Optional("address_line2"): And(str, len),
     "city": And(str, len),
     "country": And(str, len),
     "pin_code": int,

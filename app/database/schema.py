@@ -5,26 +5,15 @@ import uuid
 from datetime import datetime
 
 import sqlamp
-from helpers.codes import REBEL
-from helpers.codes import STORM_TROOPER
-from helpers.codes import VADER
-from helpers.helpers import CURRENT_TIME
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy import Index
-from sqlalchemy import Integer
-from sqlalchemy import Sequence
-from sqlalchemy import String
-from sqlalchemy import Text
+from sqlalchemy import (Column, DateTime, ForeignKey, Index, Integer, Sequence,
+                        String, Text)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import backref
-from sqlalchemy.orm import deferred
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import backref, deferred, relationship
 from sqlalchemy.sql import func
-from sqlalchemy_utils import EmailType
-from sqlalchemy_utils import PasswordType
-from sqlalchemy_utils import UUIDType
+from sqlalchemy_utils import EmailType, PasswordType, UUIDType
+
+from helpers.codes import REBEL, STORM_TROOPER, VADER
+from helpers.helpers import CURRENT_TIME
 
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
 
@@ -236,8 +225,6 @@ class Role(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
-# Add few roles
 
 
 class UserRole(Base):
