@@ -17,6 +17,8 @@ schema = "*"
 alembic = "*"
 pre-commit = "*"
 pg8000 = "*"
+autopep8 = "*"
+geoalchemy2 = "*"
 
 [dev-packages]
 autopep8 = "*"

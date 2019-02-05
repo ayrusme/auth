@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ffd70becec3732fef0c3a547edd5809152266b3c1ffc453d24344107d955d0f8"
+            "sha256": "0daea4a687e082bb3574801dfa16cc5cae2f709c7f10c965124d8b971cb9f25a"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -29,6 +29,13 @@
                 "sha256:5eaaacd0886e8b581f0e4ff383fb6504720bb2b3c7be17307724246261a41adf"
             ],
             "version": "==1.1.2"
+        },
+        "autopep8": {
+            "hashes": [
+                "sha256:33d2b5325b7e1afb4240814fe982eea3a92ebea712869bfd08b3c0393404248c"
+            ],
+            "index": "pypi",
+            "version": "==1.4.3"
         },
         "cfgv": {
             "hashes": [
@@ -66,6 +73,14 @@
             ],
             "index": "pypi",
             "version": "==3.17.0"
+        },
+        "geoalchemy2": {
+            "hashes": [
+                "sha256:7d66d01af82d22bc37d3ebb1e73713b87ac5e116b3bc82ea4ec0584bbaa89f89",
+                "sha256:eed7a62f5a13d1bbfaff708b345da663fb32ef879b662db6254b46f22bb93fe1"
+            ],
+            "index": "pypi",
+            "version": "==0.5.0"
         },
         "identify": {
             "hashes": [
@@ -164,6 +179,13 @@
             "index": "pypi",
             "version": "==1.14.3"
         },
+        "pycodestyle": {
+            "hashes": [
+                "sha256:95a2219d12372f05704562a14ec30bc76b05a5b297b21a5dfe3f6fac3491ae56",
+                "sha256:e40a936c9a450ad81df37f549d676d127b1b66000a6c500caa2b085bc0ca976c"
+            ],
+            "version": "==2.5.0"
+        },
         "pyjwt": {
             "hashes": [
                 "sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e",
@@ -203,10 +225,10 @@
         },
         "python-dateutil": {
             "hashes": [
-                "sha256:063df5763652e21de43de7d9e00ccf239f953a832941e37be541614732cdfc93",
-                "sha256:88f9287c0174266bb0d8cedd395cfba9c58e87e5ad86b2ce58859bc11be3cf02"
+                "sha256:7e6584c74aeed623791615e26efd690f29817a27c73085b78e4bad02493df2fb",
+                "sha256:c89805f6f4d64db21ed966fda138f8a5ed7a4fdbc1a8ee329ce1b74e3c74da9e"
             ],
-            "version": "==2.7.5"
+            "version": "==2.8.0"
         },
         "python-editor": {
             "hashes": [
