@@ -6,11 +6,13 @@ from copy import deepcopy
 from datetime import datetime
 
 from database.engine import SESSION, find_record
-from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, REBEL, NOT_FOUND,
-                           REGISTER_SUCCESS, RECORD_FOUND)
+from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
+                           GENERIC_SUCCESS, NOT_FOUND, REBEL, RECORD_FOUND,
+                           REGISTER_SUCCESS)
 
-from . import (AUTHENTICATION_SCHEMA_VALIDATOR, USER_SCHEMA_VALIDATOR,
-               USER_UPDATE_VALIDATOR, User, UserAuthentication, UserRole)
+from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
+               USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
+               UserAuthentication, UserRole)
 
 
 def register_user(user_details, role=REBEL):
@@ -28,38 +30,43 @@ def register_user(user_details, role=REBEL):
     # Validate the incoming details
     if AUTHENTICATION_SCHEMA_VALIDATOR.is_valid(user_details):
         session = SESSION()
-        result, session = find_record(UserAuthentication, session, {
-            "username": user_details['username']
-        })
-        if not result:
-            user_id = uuid.uuid4().hex
-            # create user auth
-            user_authentication = UserAuthentication(
-                **{
+        try:
+            result, session = find_record(UserAuthentication, session, {
+                "username": user_details['username']
+            })
+            if not result:
+                user_id = uuid.uuid4().hex
+                # create user auth
+                user_authentication = UserAuthentication(
+                    **{
+                        "guid": uuid.uuid4().hex,
+                        "user_id": user_id,
+                        "created_at": datetime.now(),
+                        "updated_at": datetime.now(),
+                    }, **user_details
+                )
+                # assign role
+                user_role = UserRole(**{
                     "guid": uuid.uuid4().hex,
                     "user_id": user_id,
-                    "created_at": datetime.now(),
-                    "updated_at": datetime.now(),
-                }, **user_details
-            )
-            # assign role
-            user_role = UserRole(**{
-                "guid": uuid.uuid4().hex,
-                "user_id": user_id,
-                "role_id": role['role_id']
-            })
-            # create user object
-            user = User(**{
-                "guid": user_id,
-                "phone": user_details['username'],
-                "authentication": [user_authentication],
-                "role": [user_role]
-            })
-            session.add(user)
-            session.commit()
-            response = deepcopy(REGISTER_SUCCESS)
-        else:
-            response = deepcopy(ENTITY_EXISTS)
+                    "role_id": role['role_id']
+                })
+                # create user object
+                user = User(**{
+                    "guid": user_id,
+                    "phone": user_details['username'],
+                    "authentication": [user_authentication],
+                    "role": [user_role]
+                })
+                session.add(user)
+                session.commit()
+                response = deepcopy(REGISTER_SUCCESS)
+            else:
+                response = deepcopy(ENTITY_EXISTS)
+        except Exception as exp:
+            session.rollback()
+            response = deepcopy(EXCEPTION_RES)
+            response['payload']['description'] = exp
         session.close()
     return response
 
@@ -83,12 +90,39 @@ def get_user(user_details):
     return response
 
 
-def modify_user(user_details):
+def modify_user(user_id, user_details):
     """
     Function to modify the user details for a particular user
 
     Params
     --------------
+    user_details: dict
+        The details of the user that needs to be updated
+
     Returns
     --------------
+    NOT_FOUND: dict
+        If the user is not found
+
     """
+    pass
+
+
+def add_address(user_id, address):
+    """
+    Function to add address to the given userID
+    """
+    response = deepcopy(BAD_REQUEST)
+    if ADDRESS_SCHEMA_VALIDATOR.is_valid(address):
+        session = SESSION()
+        try:
+            address = Address(**address)
+            session.add(address)
+            session.commit()
+            response = deepcopy(GENERIC_SUCCESS)
+        except Exception as exp:
+            session.rollback()
+            response = deepcopy(EXCEPTION_RES)
+            response['payload']['description'] = exp
+        session.close()
+    return response

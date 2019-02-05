@@ -37,21 +37,24 @@ def login(username, password):
     response = deepcopy(NOT_AUTHENTICATED)
     session = SESSION()
     # result, session = find_record(UserAuthentication, session, {"username": username})
-    user, auth = session.query(User, UserAuthentication).filter(
-        UserAuthentication.username == username
-        ).first()
-    session.flush()
-    if user and auth and auth.password == password:
-        response = deepcopy(AUTH_OKAY)
-        response['payload']['user'] = user.serialize
-        response['payload']['access_token'] = create_access_token(
-            identity=user.guid,
-            expires_delta=EXPIRY_DURATION
-        )
-        response['payload']['expires_in'] = EXPIRY_DURATION.seconds
-        response['payload']['not_before'] = int(time() + EXPIRY_DURATION.seconds)
-        response['payload']['refresh_token'] = create_refresh_token(
-            identity=user.guid,
-            expires_delta=False
-        )
+    try:
+        user, auth = session.query(User, UserAuthentication).filter(
+            UserAuthentication.username == username
+            ).first()
+        if user and auth and auth.password == password:
+            response = deepcopy(AUTH_OKAY)
+            response['payload']['user'] = user.serialize
+            response['payload']['access_token'] = create_access_token(
+                identity=user.guid,
+                expires_delta=EXPIRY_DURATION
+            )
+            response['payload']['expires_in'] = EXPIRY_DURATION.seconds
+            response['payload']['not_before'] = int(time() + EXPIRY_DURATION.seconds)
+            response['payload']['refresh_token'] = create_refresh_token(
+                identity=user.guid,
+                expires_delta=False
+            )
+    except Exception as exp:
+        print(exp)
+    session.close()
     return response

@@ -120,25 +120,28 @@ def find_record(model, session, filter_dict=None, first_only=True):
     as false, understand the implications of performance
     """
     records = None
-    if first_only:
-        if filter_dict:
-            records = session.query(
-                model).filter_by(
-                    **filter_dict
+    try:
+        if first_only:
+            if filter_dict:
+                records = session.query(
+                    model).filter_by(
+                        **filter_dict
+                    ).first()
+            else:
+                records = session.query(
+                    model
                 ).first()
         else:
-            records = session.query(
-                model
-            ).first()
-    else:
-        if filter_dict:
-            records = session.query(
-                model
-            ).filter_by(
-                **filter_dict
-            ).all()
-        else:
-            records = session.query(
-                model
-            ).all()
+            if filter_dict:
+                records = session.query(
+                    model
+                ).filter_by(
+                    **filter_dict
+                ).all()
+            else:
+                records = session.query(
+                    model
+                ).all()
+    except Exception as exp:
+        print(exp)
     return records, session

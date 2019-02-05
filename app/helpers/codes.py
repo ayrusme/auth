@@ -36,6 +36,7 @@ NOT_AUTHENTICATED_STATUS_CODE = 401
 NOT_AUTHORIZED_STATUS_CODE = 403
 NOT_FOUND_STATUS_CODE = 404
 CONFLICT_STATUS_CODE = 409
+SERVER_FAILURE_STATUS_CODE = 500
 
 # Response packets
 NOT_IMPLEMENTED = {
@@ -122,5 +123,23 @@ ENTITY_EXISTS = {
         "status": ERROR_STATUS,
         "message": "The entity already exists!",
         "description": "The entity exists! We cannot create an entity that already exists!"
+    }
+}
+
+GENERIC_SUCCESS = {
+    "status_code": SUCCESS_STATUS_CODE,
+    "payload": {
+        "status": SUCCESS_STATUS,
+        "message": "Good to go, champ!",
+        "description": "The operation you called for was a huge success! Have a beer on me."
+    }
+}
+
+EXCEPTION_RES = {
+    "status_code": SERVER_FAILURE_STATUS_CODE,
+    "payload": {
+        "status": ERROR_STATUS,
+        "message": "Something really bad happened!",
+        "description": ""
     }
 }
