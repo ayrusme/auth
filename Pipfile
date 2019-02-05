@@ -16,6 +16,7 @@ pyodbc = "*"
 schema = "*"
 alembic = "*"
 pre-commit = "*"
+pg8000 = "*"
 
 [dev-packages]
 autopep8 = "*"

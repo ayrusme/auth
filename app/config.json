@@ -4,13 +4,13 @@
         "PORT": 9090
     },
     "DATABASE": {
-        "TYPE": "mysql",
+        "TYPE": "postgresql",
         "NAME": "astrix",
-        "DRIVER": "pymysql",
-        "USERNAME": "root",
+        "DRIVER": "pg8000",
+        "USERNAME": "suryaraman",
         "PASSWORD": "",
         "HOST": "localhost",
-        "PORT": 3306
+        "PORT": 5432
     },
     "LOG": {
         "LEVEL": "INFO",
