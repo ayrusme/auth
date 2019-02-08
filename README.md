@@ -2,16 +2,12 @@
 
 This repository contains all the backend files required for Project Astrix
 
-## Installing MySQL
----
-TODO 
-
 ## Installing Project Astrix
 ---
-This project uses a virtual environment to manage all dependencies. 
+This project uses a virtual environment to manage all dependencies.
 
 ### Prerequisites:
-* Linux ( Preferably Ubuntu )
+* Linux ( Ubuntu, CentOS, RHEL )
 * Python 3.6
 * pipenv
 
