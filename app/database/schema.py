@@ -5,12 +5,13 @@ import uuid
 from datetime import datetime
 
 import sqlamp
-from sqlalchemy import (Column, DateTime, ForeignKey, Index, Integer, Sequence,
-                        String, Text)
+from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Index, Integer,
+                        Sequence, String, Text)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, deferred, relationship
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
+from geoalchemy2 import Geometry
 
 from helpers.codes import REBEL, STORM_TROOPER, VADER
 from helpers.helpers import CURRENT_TIME
@@ -164,7 +165,9 @@ class Address(Base):
     city = Column(String(30), nullable=False)
     country = Column(String(20), nullable=False)
     pin_code = Column(Integer, nullable=False)
-    lat_long = Column(String(50), nullable=False)
+    lat_long = Column(Geometry('POINT'), nullable=False)
+    default = Column(Boolean, nullable=False, default=False)
+    name = Column(String(30), nullable=False)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults',
@@ -187,8 +190,7 @@ class Address(Base):
             "address_line2": self.address_line2,
             "city": self.city,
             "country": self.country,
-            "pin_code": self.pin_code,
-            "lat_long": self.lat_long
+            "pin_code": self.pin_code
         }
 
 

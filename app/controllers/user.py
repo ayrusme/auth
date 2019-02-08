@@ -2,10 +2,11 @@ from copy import deepcopy
 
 from flask import abort, jsonify, request
 from flask.blueprints import Blueprint
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flask_jwt_extended import (create_access_token, get_jwt_identity,
+                                jwt_required)
 
 from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
-from models.user import register_user, get_user
+from models.user import add_address, get_user, register_user
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/')
 
@@ -46,6 +47,19 @@ def signup_admin():
     return jsonify(response['payload']), response['status_code']
 
 
+@USER_BLUEPRINT.route('/add-address', methods=['POST'])
+@jwt_required
+def create_address():
+    """
+    Endpoint to add address to the current user
+    """
+    response = deepcopy(BAD_REQUEST)
+    if hasattr(request, "json") and request.json is not None:
+        user_id = get_jwt_identity()
+        if user_id:
+            response = add_address(user_id, request.json)
+    return jsonify(response['payload']), response['status_code']
+
 # READ ENDPOINTS
 
 
@@ -65,13 +79,37 @@ def get_self():
 # MODIFY ENDPOINTS
 
 
-@USER_BLUEPRINT.route('/modify-role', methods=['PUT'])
+@USER_BLUEPRINT.route('/update-role', methods=['POST'])
 @jwt_required
 def add_role():
     """
     Endpoint to allow users to modify roles
     """
-    response = deepcopy(BAD_REQUEST)
+    response = deepcopy(NOT_IMPLEMENTED)
     if hasattr(request, "json") and request.json is not None:
-        response = deepcopy(BAD_REQUEST)
+        response = deepcopy(NOT_IMPLEMENTED)
+    return jsonify(response['payload']), response['status_code']
+
+
+@USER_BLUEPRINT.route('/update-address', methods=['POST'])
+@jwt_required
+def update_address():
+    """
+    Endpoint to update address to the current user
+    """
+    response = deepcopy(NOT_IMPLEMENTED)
+    if hasattr(request, "json") and request.json is not None:
+        response = deepcopy(NOT_IMPLEMENTED)
+    return jsonify(response['payload']), response['status_code']
+
+
+@USER_BLUEPRINT.route('/update-user', methods=['POST'])
+@jwt_required
+def update_user():
+    """
+    Endpoint to update the details of the current user
+    """
+    response = deepcopy(NOT_IMPLEMENTED)
+    if hasattr(request, "json") and request.json is not None:
+        response = deepcopy(NOT_IMPLEMENTED)
     return jsonify(response['payload']), response['status_code']

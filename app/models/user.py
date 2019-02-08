@@ -66,7 +66,7 @@ def register_user(user_details, role=REBEL):
         except Exception as exp:
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
-            response['payload']['description'] = exp
+            response['payload']['description'] = repr(exp)
         session.close()
     return response
 
@@ -82,10 +82,15 @@ def get_user(user_details):
     response = deepcopy(NOT_FOUND)
     if USER_UPDATE_VALIDATOR.is_valid(user_details):
         session = SESSION()
-        result, session = find_record(User, session, user_details)
-        if result:
-            response = deepcopy(RECORD_FOUND)
-            response['payload'] = result.serialize
+        try:
+            result, session = find_record(User, session, user_details)
+            if result:
+                response = deepcopy(RECORD_FOUND)
+                response['payload'] = result.serialize
+        except Exception as exp:
+            session.rollback()
+            response = deepcopy(EXCEPTION_RES)
+            response['payload']['description'] = repr(exp)
         session.close()
     return response
 
@@ -114,6 +119,10 @@ def add_address(user_id, address):
     """
     response = deepcopy(BAD_REQUEST)
     if ADDRESS_SCHEMA_VALIDATOR.is_valid(address):
+        address = ADDRESS_SCHEMA_VALIDATOR.validate(address)
+        address['guid'] = uuid.uuid4().hex
+        address['user_id'] = user_id
+        print(address)
         session = SESSION()
         try:
             address = Address(**address)
@@ -123,6 +132,6 @@ def add_address(user_id, address):
         except Exception as exp:
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
-            response['payload']['description'] = exp
+            response['payload']['description'] = repr(exp)
         session.close()
     return response

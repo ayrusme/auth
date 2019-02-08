@@ -38,6 +38,7 @@ ADDRESS_SCHEMA_VALIDATOR = Schema({
     "country": And(str, len),
     "pin_code": int,
     "lat_long": And(str, len),
+    Optional("name"): And(str, len)
 })
 
 AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
