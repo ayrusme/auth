@@ -2,33 +2,45 @@
 This file holds the authentication layer for all incoming requests
 """
 from functools import wraps
+from uuid import UUID
 
 from flask import abort, jsonify, request
-from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                get_jwt_identity, jwt_refresh_token_required,
-                                jwt_required)
+from flask_jwt_extended import get_jwt_claims, verify_jwt_in_request
 
-from auth_codes import JWT_ALGORITHM, JWT_SECRET
-from helpers.codes import TOKEN_ERROR
+from helpers.codes import TOKEN_ERROR, TROOPER_ROLE_ID, VADER_ROLE_ID
+
+from .auth_codes import JWT_ALGORITHM, JWT_SECRET
 
 
-def auth_wrapper(f):
-    """
-    Auth wrapper for Astrix Backend
+def vader_wrapper(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        """
+        Auth wrapper for Astrix Backend
 
-    Use this wrapper to make sure only admin can access certain routes
-    """
-    @wraps(f)
-    def wrapper(*args, **kws):
-        if 'Authorization' not in request.headers:
-            abort(401)
+        Use this wrapper to make sure only admin can access certain routes
+        """
+        verify_jwt_in_request()
+        claims = get_jwt_claims()
+        if str(UUID(VADER_ROLE_ID)) not in claims['roles']:
+            return jsonify(msg='Admins only!'), 403
+        else:
+            return fn(*args, **kwargs)
+    return wrapper
 
-        user = None
-        data = request.headers['Authorization'].encode('ascii', 'ignore')
-        token = str.replace(str(data), 'Bearer ', '')
-        try:
-            user = get_jwt_identity()
-        except BaseException:
-            abort(401)
-        return f(user, *args, **kws)
+
+def trooper_wrapper(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        """
+        Auth wrapper for Astrix Backend
+
+        Use this wrapper to make sure only admins and troopers have access
+        """
+        verify_jwt_in_request()
+        claims = get_jwt_claims()
+        if VADER_ROLE_ID in claims['roles'] or TROOPER_ROLE_ID in claims['roles']:
+            return fn(*args, **kwargs)
+        else:
+            return jsonify(msg='Admins only!'), 403
     return wrapper
