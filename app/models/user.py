@@ -14,6 +14,8 @@ from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
                USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
                UserAuthentication, UserRole)
 
+# CREATE
+
 
 def register_user(user_details, role=REBEL):
     """
@@ -71,6 +73,49 @@ def register_user(user_details, role=REBEL):
     return response
 
 
+def add_address(user_id, address):
+    """
+    Function to add address to the given userID
+    """
+    response = deepcopy(BAD_REQUEST)
+    if ADDRESS_SCHEMA_VALIDATOR.is_valid(address):
+        address = ADDRESS_SCHEMA_VALIDATOR.validate(address)
+        address['guid'] = uuid.uuid4().hex
+        address['user_id'] = user_id
+        session = SESSION()
+        try:
+            address = Address(**address)
+            session.add(address)
+            session.commit()
+            response = deepcopy(GENERIC_SUCCESS)
+        except Exception as exp:
+            session.rollback()
+            response = deepcopy(EXCEPTION_RES)
+            response['payload']['description'] = repr(exp)
+        session.close()
+    return response
+
+# READ
+
+
+def get_roles(user_id):
+    """
+    Function to get all the roles of the given user_id
+    """
+    session = SESSION()
+    result = []
+    try:
+        user_roles, session = find_record(UserRole, session, {
+            "user_id": user_id
+        }, False)
+        result = [role.role_id for role in user_roles]
+    except Exception as exp:
+        print(exp)
+        session.rollback()
+    session.close()
+    return result
+
+
 def get_user(user_details):
     """
     Function to get a user from a DB
@@ -94,6 +139,8 @@ def get_user(user_details):
         session.close()
     return response
 
+# MODIFY
+
 
 def modify_user(user_id, user_details):
     """
@@ -111,44 +158,3 @@ def modify_user(user_id, user_details):
 
     """
     pass
-
-
-def add_address(user_id, address):
-    """
-    Function to add address to the given userID
-    """
-    response = deepcopy(BAD_REQUEST)
-    if ADDRESS_SCHEMA_VALIDATOR.is_valid(address):
-        address = ADDRESS_SCHEMA_VALIDATOR.validate(address)
-        address['guid'] = uuid.uuid4().hex
-        address['user_id'] = user_id
-        session = SESSION()
-        try:
-            address = Address(**address)
-            session.add(address)
-            session.commit()
-            response = deepcopy(GENERIC_SUCCESS)
-        except Exception as exp:
-            session.rollback()
-            response = deepcopy(EXCEPTION_RES)
-            response['payload']['description'] = repr(exp)
-        session.close()
-    return response
-
-
-def get_roles(user_id):
-    """
-    Function to get all the roles of the given user_id
-    """
-    session = SESSION()
-    result = []
-    try:
-        user_roles, session = find_record(UserRole, session, {
-            "user_id": user_id
-        }, False)
-        result = [role.guid for role in user_roles]
-    except Exception as exp:
-        print(exp)
-        session.rollback()
-    session.close()
-    return result

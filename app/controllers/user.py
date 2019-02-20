@@ -5,10 +5,11 @@ from flask.blueprints import Blueprint
 from flask_jwt_extended import (create_access_token, get_jwt_claims,
                                 get_jwt_identity, jwt_required)
 
+from auth.auth import vader_wrapper
 from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
 from models.user import add_address, get_user, register_user
 
-USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/')
+USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
 
 # CREATE ENDPOINTS
@@ -63,14 +64,13 @@ def create_address():
 # READ ENDPOINTS
 
 
-@USER_BLUEPRINT.route('/user', methods=["GET"])
+@USER_BLUEPRINT.route('/', methods=["GET"])
 @jwt_required
 def get_self():
     """
     Endpoint to get the current user information
     """
     user_id = get_jwt_identity()
-    print(get_jwt_claims())
     response = get_user({
         "guid": user_id
     })
@@ -81,6 +81,7 @@ def get_self():
 
 @USER_BLUEPRINT.route('/update-role', methods=['POST'])
 @jwt_required
+@vader_wrapper
 def add_role():
     """
     Endpoint to allow users to modify roles

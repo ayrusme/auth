@@ -2,9 +2,9 @@
 This file contains all static references
 """
 # Roles
-VADER_ROLE_ID = "8a3aba91c925588b90ecd2cd58f73c57"
-TROOPER_ROLE_ID = "5ab57aa83e9253c5ab198099ccd7627a"
-REBEL_ROLE_ID = "649a4be4673d52beb64a6a7fed720bdf"
+VADER_ROLE_ID = "8a3aba91-c925-588b-90ec-d2cd58f73c57"
+TROOPER_ROLE_ID = "5ab57aa8-3e92-53c5-ab19-8099ccd7627a"
+REBEL_ROLE_ID = "649a4be4-673d-52be-b64a-6a7fed720bdf"
 
 VADER = {
     "role_id": VADER_ROLE_ID,
