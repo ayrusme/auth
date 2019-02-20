@@ -122,7 +122,6 @@ def add_address(user_id, address):
         address = ADDRESS_SCHEMA_VALIDATOR.validate(address)
         address['guid'] = uuid.uuid4().hex
         address['user_id'] = user_id
-        print(address)
         session = SESSION()
         try:
             address = Address(**address)
@@ -135,3 +134,21 @@ def add_address(user_id, address):
             response['payload']['description'] = repr(exp)
         session.close()
     return response
+
+
+def get_roles(user_id):
+    """
+    Function to get all the roles of the given user_id
+    """
+    session = SESSION()
+    result = []
+    try:
+        user_roles, session = find_record(UserRole, session, {
+            "user_id": user_id
+        }, False)
+        result = [role.guid for role in user_roles]
+    except Exception as exp:
+        print(exp)
+        session.rollback()
+    session.close()
+    return result

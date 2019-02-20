@@ -10,6 +10,7 @@ from config.config import SERVER_PORT, SERVER_URL
 from controllers.authentication import AUTH_BLUEPRINT
 from controllers.user import USER_BLUEPRINT
 from helpers.codes import TOKEN_ERROR
+from models.user import get_roles
 
 # Create the server
 APP = Flask(__name__)
@@ -40,6 +41,13 @@ def unauthorized(token):
 @JWT.expired_token_loader
 def unauthorized(token):
     return jsonify(TOKEN_ERROR['payload']), TOKEN_ERROR['status_code']
+
+
+@JWT.user_claims_loader
+def append_roles(user_id):
+    return {
+        'roles': get_roles(user_id)
+    }
 
 
 # Start the server!

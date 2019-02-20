@@ -2,8 +2,8 @@ from copy import deepcopy
 
 from flask import abort, jsonify, request
 from flask.blueprints import Blueprint
-from flask_jwt_extended import (create_access_token, get_jwt_identity,
-                                jwt_required)
+from flask_jwt_extended import (create_access_token, get_jwt_claims,
+                                get_jwt_identity, jwt_required)
 
 from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
 from models.user import add_address, get_user, register_user
@@ -70,11 +70,11 @@ def get_self():
     Endpoint to get the current user information
     """
     user_id = get_jwt_identity()
+    print(get_jwt_claims())
     response = get_user({
         "guid": user_id
     })
     return jsonify(response['payload']), response['status_code']
-
 
 # MODIFY ENDPOINTS
 
