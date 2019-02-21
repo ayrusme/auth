@@ -139,6 +139,32 @@ def get_user(user_details):
         session.close()
     return response
 
+
+def get_addresses(user_id):
+    """
+    Function to get all the addresses of the user
+
+    Returns
+    -----------
+    Array of addresses, empty array if no addresses are found
+    """
+    response = deepcopy(NOT_FOUND)
+    response['payload']['addresses'] = []
+    session = SESSION()
+    try:
+        result, session = find_record(Address, session, {
+            "user_id": user_id
+        }, False)
+        if result:
+            response = deepcopy(RECORD_FOUND)
+            response['payload']['addresses'] = [item.serialize for item in result]
+    except Exception as exp:
+        session.rollback()
+        response = deepcopy(EXCEPTION_RES)
+        response['payload']['description'] = repr(exp)
+    session.close()
+    return response
+
 # MODIFY
 
 

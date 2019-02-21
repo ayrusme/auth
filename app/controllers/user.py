@@ -7,7 +7,7 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
 
 from auth.auth import vader_wrapper
 from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
-from models.user import add_address, get_user, register_user
+from models.user import add_address, get_user, register_user, get_addresses
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
@@ -38,6 +38,7 @@ def signup_super_admin():
 
 
 @USER_BLUEPRINT.route('/create-trooper', methods=['POST'])
+@vader_wrapper
 def signup_admin():
     """
     Endpoint to allow users to signup
@@ -75,6 +76,18 @@ def get_self():
         "guid": user_id
     })
     return jsonify(response['payload']), response['status_code']
+
+
+@USER_BLUEPRINT.route('/addresses', methods=["GET"])
+@jwt_required
+def get_address():
+    """
+    Endpoint to get the current user information
+    """
+    user_id = get_jwt_identity()
+    response = get_addresses(user_id)
+    return jsonify(response['payload']), response['status_code']
+
 
 # MODIFY ENDPOINTS
 
