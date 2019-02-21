@@ -183,4 +183,21 @@ def modify_user(user_id, user_details):
         If the user is not found
 
     """
-    pass
+    response = deepcopy(NOT_FOUND)
+    session = SESSION()
+    try:
+        user, session = find_record(User, session, {
+            "guid": user_id
+        })
+        if user:
+            for key, value in user_details.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+            session.commit()
+            response = deepcopy(GENERIC_SUCCESS)
+    except Exception as exp:
+        session.rollback()
+        response = deepcopy(EXCEPTION_RES)
+        response['payload']['description'] = repr(exp)
+    session.close()
+    return response

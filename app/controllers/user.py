@@ -7,7 +7,8 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
 
 from auth.auth import vader_wrapper
 from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
-from models.user import add_address, get_user, register_user, get_addresses
+from models.user import (add_address, get_addresses, get_user, modify_user,
+                         register_user)
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
@@ -125,5 +126,6 @@ def update_user():
     """
     response = deepcopy(NOT_IMPLEMENTED)
     if hasattr(request, "json") and request.json is not None:
-        response = deepcopy(NOT_IMPLEMENTED)
+        user_id = get_jwt_identity()
+        response = modify_user(user_id, request.json)
     return jsonify(response['payload']), response['status_code']
