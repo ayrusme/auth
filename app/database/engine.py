@@ -24,7 +24,12 @@ except exc.DBAPIError:
     )
 SESSION.remove()
 SESSION.configure(bind=_ENGINE, autoflush=False, expire_on_commit=False)
-Base.metadata.create_all(_ENGINE)
+try:
+    Base.metadata.create_all(_ENGINE)
+except Exception as exp:
+    # Multiple workers will try to insert the same schema
+    # Handle it gracefully
+    print("The workers are trying to fuck up the system")
 
 
 @event.listens_for(_ENGINE, "engine_connect")
@@ -126,7 +131,7 @@ def find_record(model, session, filter_dict=None, first_only=True):
                 records = session.query(
                     model).filter_by(
                         **filter_dict
-                    ).first()
+                ).first()
             else:
                 records = session.query(
                     model

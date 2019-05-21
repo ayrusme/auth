@@ -48,3 +48,11 @@ AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
     "username": And(str, len),
     "password": And(str, len),
 })
+
+ROLE_UPDATE_VALIDATOR = Schema({
+    Forbidden("guid"): And(str, len),
+    Forbidden("created_at"): And(str, len),
+    Forbidden("updated_at"): And(str, len),
+    "roles": list,
+    "user_id": And(str, len)
+})

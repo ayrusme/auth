@@ -6,9 +6,10 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
                                 get_jwt_identity, jwt_required)
 
 from auth.auth import vader_wrapper
-from helpers.codes import BAD_REQUEST, NOT_IMPLEMENTED, STORM_TROOPER, VADER
-from models.user import (add_address, get_addresses, get_user, modify_user,
-                         register_user)
+from helpers.codes import (ALL_ROLES, BAD_REQUEST, GENERIC_SUCCESS,
+                           NOT_IMPLEMENTED, STORM_TROOPER, VADER)
+from models.user import (add_address, add_role, get_addresses, get_user,
+                         modify_user, register_user)
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
@@ -90,6 +91,17 @@ def get_address():
     return jsonify(response['payload']), response['status_code']
 
 
+@USER_BLUEPRINT.route('/roles', methods=["GET"])
+@jwt_required
+@vader_wrapper
+def get_all_roles():
+    """
+    Endpoint which will return all the roles
+    """
+    response = deepcopy(GENERIC_SUCCESS)
+    response['payload']['roles'] = deepcopy(ALL_ROLES)
+    return jsonify(response['payload']), response['status_code']
+
 # MODIFY ENDPOINTS
 
 
@@ -100,9 +112,9 @@ def add_role():
     """
     Endpoint to allow users to modify roles
     """
-    response = deepcopy(NOT_IMPLEMENTED)
+    response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
-        response = deepcopy(NOT_IMPLEMENTED)
+        response = add_role(request.json)
     return jsonify(response['payload']), response['status_code']
 
 

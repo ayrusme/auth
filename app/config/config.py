@@ -3,7 +3,7 @@ The file to hold the configuration for the project
 """
 import json
 
-with open('./app/config.json') as file:
+with open('config.json') as file:
     DATA = json.load(file)
 
     # read server configuration

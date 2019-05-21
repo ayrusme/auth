@@ -157,7 +157,8 @@ def get_addresses(user_id):
         }, False)
         if result:
             response = deepcopy(RECORD_FOUND)
-            response['payload']['addresses'] = [item.serialize for item in result]
+            response['payload']['addresses'] = [
+                item.serialize for item in result]
     except Exception as exp:
         session.rollback()
         response = deepcopy(EXCEPTION_RES)
@@ -184,6 +185,41 @@ def modify_user(user_id, user_details):
 
     """
     response = deepcopy(NOT_FOUND)
+    session = SESSION()
+    try:
+        user, session = find_record(User, session, {
+            "guid": user_id
+        })
+        if user:
+            for key, value in user_details.items():
+                if hasattr(user, key):
+                    setattr(user, key, value)
+            session.commit()
+            response = deepcopy(GENERIC_SUCCESS)
+    except Exception as exp:
+        session.rollback()
+        response = deepcopy(EXCEPTION_RES)
+        response['payload']['description'] = repr(exp)
+    session.close()
+    return response
+
+
+def add_role(user_id, roles):
+    """
+    Function to add a role for the user
+
+    Params
+    --------------
+    user_details: dict
+        The details of the user that needs to be updated
+
+    Returns
+    --------------
+    NOT_FOUND: dict
+        If the user is not found
+
+    """
+    response = deepcopy(BAD_REQUEST)
     session = SESSION()
     try:
         user, session = find_record(User, session, {
