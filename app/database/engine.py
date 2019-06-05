@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from config.config import DB_URI
 from helpers.codes import REBEL, STORM_TROOPER, VADER
 
-from . import Base, Role
+from . import Base, SystemRole
 
 SESSION = scoped_session(sessionmaker())
 
@@ -70,25 +70,25 @@ def ping_connection(connection, branch):
 
 # INIT ROLES
 DB_SESSION = SESSION()
-SUPER_ADMIN_ROLE = Role(**VADER)
-ADMIN_ROLE = Role(**STORM_TROOPER)
-USER_ROLE = Role(**REBEL)
+SUPER_ADMIN_ROLE = SystemRole(**VADER)
+ADMIN_ROLE = SystemRole(**STORM_TROOPER)
+USER_ROLE = SystemRole(**REBEL)
 
 try:
-    RESULT = DB_SESSION.query(Role).filter(
-        Role.role_id == SUPER_ADMIN_ROLE.role_id,
+    RESULT = DB_SESSION.query(SystemRole).filter(
+        SystemRole.guid == SUPER_ADMIN_ROLE.guid,
     ).first()
     if not RESULT:
         print("Adding VADER")
         DB_SESSION.add(SUPER_ADMIN_ROLE)
-    RESULT = DB_SESSION.query(Role).filter(
-        Role.role_id == USER_ROLE.role_id,
+    RESULT = DB_SESSION.query(SystemRole).filter(
+        SystemRole.guid == USER_ROLE.guid,
     ).first()
     if not RESULT:
         print("Adding Rebels")
         DB_SESSION.add(USER_ROLE)
-    RESULT = DB_SESSION.query(Role).filter(
-        Role.role_id == ADMIN_ROLE.role_id,
+    RESULT = DB_SESSION.query(SystemRole).filter(
+        SystemRole.guid == ADMIN_ROLE.guid,
     ).first()
     if not RESULT:
         print("Adding Storm Troopers to manage the Rebels")

@@ -12,7 +12,7 @@ from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
 
 from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
                USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
-               UserAuthentication, UserRole)
+               UserAuthentication, SystemRole)
 
 # CREATE
 
@@ -51,7 +51,7 @@ def register_user(user_details, role=REBEL):
                 user_role = UserRole(**{
                     "guid": uuid.uuid4().hex,
                     "user_id": user_id,
-                    "role_id": role['role_id']
+                    "role_id": role['guid']
                 })
                 # create user object
                 user = User(**{
@@ -105,7 +105,7 @@ def get_roles(user_id):
     session = SESSION()
     result = []
     try:
-        user_roles, session = find_record(UserRole, session, {
+        user_roles, session = find_record(SystemRole, session, {
             "user_id": user_id
         }, False)
         result = [role.role_id for role in user_roles]
@@ -237,3 +237,25 @@ def add_role(user_id, roles):
         response['payload']['description'] = repr(exp)
     session.close()
     return response
+
+
+def delete_user(user_id):
+    """
+    Function to delete an user from the system
+
+    user_id: String
+        The user_id to remove from the system
+
+    Caution: Remove dangling references as well
+    """
+    return
+
+
+def delete_users(users):
+    """
+    Function to delete a lot of users from the system
+
+    users: list
+        List of users to be deleted from the system
+    """
+    return

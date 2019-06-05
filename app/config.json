@@ -9,7 +9,7 @@
         "DRIVER": "pg8000",
         "USERNAME": "suryaraman",
         "PASSWORD": "",
-        "HOST": "postgis",
+        "HOST": "localhost",
         "PORT": 5432
     },
     "LOG": {

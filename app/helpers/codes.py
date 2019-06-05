@@ -7,19 +7,19 @@ TROOPER_ROLE_ID = "5ab57aa8-3e92-53c5-ab19-8099ccd7627a"
 REBEL_ROLE_ID = "649a4be4-673d-52be-b64a-6a7fed720bdf"
 
 VADER = {
-    "role_id": VADER_ROLE_ID,
+    "guid": VADER_ROLE_ID,
     "role_name": "VADER",
     "description": "If only you knew the power of the dark side!"
 }
 
 STORM_TROOPER = {
-    "role_id": TROOPER_ROLE_ID,
+    "guid": TROOPER_ROLE_ID,
     "role_name": "STORM_TROOPER",
     "description": "These aren't the roles you're looking for!"
 }
 
 REBEL = {
-    "role_id": REBEL_ROLE_ID,
+    "guid": REBEL_ROLE_ID,
     "role_name": "REBEL",
     "description": "The rebel scum are at tantooine!"
 }

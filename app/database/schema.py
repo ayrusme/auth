@@ -194,13 +194,13 @@ class Address(Base):
         }
 
 
-class Role(Base):
+class SystemRole(Base):
     """
     The model for the roles of the user
 
     ROLE MODEL
     ----------------------------------
-    role_id: Integer
+    guid: Integer
         The ID for the particular role
     role_name: String
         The name assigned to the particular role
@@ -208,9 +208,9 @@ class Role(Base):
         The description for the particular role
     """
 
-    __tablename__ = "roles"
+    __tablename__ = "system_role"
 
-    role_id = Column(UUIDType(binary=False), primary_key=True)
+    guid = Column(UUIDType(binary=False), primary_key=True)
     role_name = Column(String(20), nullable=False)
     description = Column(String(100), nullable=False)
     created_at = deferred(
@@ -251,7 +251,7 @@ class UserRole(Base):
         nullable=False,
     )
     role_id = Column(
-        UUIDType(binary=False), ForeignKey('roles.role_id'),
+        UUIDType(binary=False), ForeignKey('system_role.guid'),
         nullable=False,
     )
     created_at = deferred(
@@ -265,3 +265,188 @@ class UserRole(Base):
         ),
         group='defaults',
     )
+
+
+class Catalogue(Base):
+    """
+    Model for the catalogue
+
+    Catalogue Model
+    -------------------------
+    guid: UUIDType
+        The unique ID associated with the record
+    name: String
+        The name of the catalogue
+    """
+
+    __tablename__ = 'catalogue'
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    name = Column(String(255))
+    image = Column(String(255))  # probably the image URL, served from some CDN
+    address_line1 = Column(String(120), nullable=False)
+    address_line2 = Column(String(120), nullable=True)
+    city = Column(String(30), nullable=False)
+    country = Column(String(20), nullable=False)
+    pin_code = Column(Integer, nullable=False)
+    lat_long = Column(Geometry('POINT'), nullable=False)
+    is_available = Column(Boolean, nullable=False, default=True)
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "id": self.guid,
+            "image": self.image,
+            "address_line1": self.address_line1,
+            "address_line2": self.address_line2,
+            "city": self.city,
+            "country": self.country,
+            "pin_code": self.pin_code,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
+
+class CatalogueRole(Base):
+    """
+    The model for the roles of the user
+
+    ROLE MODEL
+    ----------------------------------
+    guid: Integer
+        The ID for the particular role
+    role_name: String
+        The name assigned to the particular role
+    description: String
+        The description for the particular role
+    """
+
+    __tablename__ = "catalogue_role"
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    role_name = Column(String(20), nullable=False)
+    description = Column(String(100), nullable=False)
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class UserCatalogueRole(Base):
+    """
+    Model for all user roles
+
+    User Role Model
+    -------------------------
+    guid: UUIDType
+        The unique ID associated with the record
+    user_id: String
+        The user id associated with the role
+    role_id: String
+        The role id associated with the user
+    """
+
+    __tablename__ = 'user_catalogue_role'
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    user_id = Column(
+        UUIDType(binary=False), ForeignKey('user.guid'),
+        nullable=False,
+    )
+    role_id = Column(
+        UUIDType(binary=False), ForeignKey('catalogue_role.guid'),
+        nullable=False,
+    )
+    catalogue_id = Column(
+        UUIDType(binary=False), ForeignKey('catalogue.guid'),
+        nullable=False,
+    )
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+
+class Item(Base):
+    """
+    Model for items inside the catalogue
+
+    Catalogue Model
+    -------------------------
+    guid: UUIDType
+        The unique ID associated with the record
+    name: String
+        The name of the item
+    catalogue_id: String
+        The catalogue associated with the user
+    """
+
+    __tablename__ = 'item'
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    catalogue_id = Column(
+        UUIDType(binary=False), ForeignKey('catalogue.guid'),
+        nullable=False,
+    )
+    name = Column(String(255), nullable=False)
+    desc = Column(String(255))
+    image = Column(String(255))  # probably the image URL, served from some CDN
+    is_available = Column(Boolean, nullable=False, default=True)
+    price = Column(Integer, nullable=False)
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "id": self.guid,
+            "name": self.name,
+            "desc": self.desc,
+            "image": self.image,
+            "price": self.price,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
