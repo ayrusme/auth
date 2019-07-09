@@ -12,7 +12,7 @@ from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
 
 from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
                USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
-               UserAuthentication, SystemRole)
+               UserAuthentication, UserRole)
 
 # CREATE
 
