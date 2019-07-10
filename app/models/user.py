@@ -7,17 +7,18 @@ from datetime import datetime
 
 from database.engine import SESSION, find_record
 from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
-                           GENERIC_SUCCESS, NOT_FOUND, REBEL, RECORD_FOUND,
+                           GENERIC_SUCCESS, NOT_FOUND, RECORD_FOUND,
                            REGISTER_SUCCESS)
+from models.roles import ALL_ROLES
 
 from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
-               USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
-               UserAuthentication, UserRole)
+               USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address,
+               SystemRole, User, UserAuthentication, UserRole)
 
 # CREATE
 
 
-def register_user(user_details, role=REBEL):
+def register_user(user_details, role=ALL_ROLES['REBEL']):
     """
     Model for creating a new user
 
@@ -105,10 +106,35 @@ def get_roles(user_id):
     session = SESSION()
     result = []
     try:
-        user_roles, session = find_record(SystemRole, session, {
+        user_roles, session = find_record(UserRole, session, {
             "user_id": user_id
         }, False)
         result = [role.role_id for role in user_roles]
+    except Exception as exp:
+        print(exp)
+        session.rollback()
+    session.close()
+    return result
+
+
+def get_full_roles(user_id):
+    """
+    Function to get all the roles of the given user_id
+    """
+    session = SESSION()
+    result = []
+    try:
+        # user_roles, session = find_record(UserRole, session, {
+        #     "user_id": user_id
+        # }, False)
+        roles = session.query(UserRole, SystemRole).filter(
+            UserRole.role_id == SystemRole.guid
+        ).filter(
+            UserRole.user_id == user_id
+        ).all()
+        for role in roles:
+            user_role, system_role = role
+            result.append(system_role.serialize)
     except Exception as exp:
         print(exp)
         session.rollback()

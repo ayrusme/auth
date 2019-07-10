@@ -6,11 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from config.config import DB_URI
-from helpers.codes import REBEL, STORM_TROOPER, VADER
+from models.roles import *
 
 from . import Base, SystemRole
-
-SESSION = scoped_session(sessionmaker())
 
 _ENGINE = create_engine(DB_URI)
 
@@ -22,8 +20,11 @@ except exc.DBAPIError:
             "encoding": "utf-8"
         }
     )
+
+SESSION = scoped_session(sessionmaker())
 SESSION.remove()
 SESSION.configure(bind=_ENGINE, autoflush=False, expire_on_commit=False)
+
 try:
     Base.metadata.create_all(_ENGINE)
 except Exception as exp:
@@ -70,34 +71,22 @@ def ping_connection(connection, branch):
 
 # INIT ROLES
 DB_SESSION = SESSION()
-SUPER_ADMIN_ROLE = SystemRole(**VADER)
-ADMIN_ROLE = SystemRole(**STORM_TROOPER)
-USER_ROLE = SystemRole(**REBEL)
 
 try:
-    RESULT = DB_SESSION.query(SystemRole).filter(
-        SystemRole.guid == SUPER_ADMIN_ROLE.guid,
-    ).first()
-    if not RESULT:
-        print("Adding VADER")
-        DB_SESSION.add(SUPER_ADMIN_ROLE)
-    RESULT = DB_SESSION.query(SystemRole).filter(
-        SystemRole.guid == USER_ROLE.guid,
-    ).first()
-    if not RESULT:
-        print("Adding Rebels")
-        DB_SESSION.add(USER_ROLE)
-    RESULT = DB_SESSION.query(SystemRole).filter(
-        SystemRole.guid == ADMIN_ROLE.guid,
-    ).first()
-    if not RESULT:
-        print("Adding Storm Troopers to manage the Rebels")
-        DB_SESSION.add(ADMIN_ROLE)
+    for role in ALL_ROLES.keys():
+        database_role = SystemRole(**ALL_ROLES[role])
+        RESULT = DB_SESSION.query(SystemRole).filter(
+            SystemRole.guid == database_role.guid,
+        ).first()
+        if not RESULT:
+            print(f"Adding {database_role.role_name}")
+            DB_SESSION.add(database_role)
     DB_SESSION.commit()
 except IntegrityError as exp:
     print(exp)
     print("Seems like the roles are added")
 except Exception as exp:
+    print("insane fuckup")
     print(exp)
     DB_SESSION.rollback()
 

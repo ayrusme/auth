@@ -7,7 +7,8 @@ from uuid import UUID
 from flask import abort, jsonify, request
 from flask_jwt_extended import get_jwt_claims, verify_jwt_in_request
 
-from helpers.codes import TOKEN_ERROR, TROOPER_ROLE_ID, VADER_ROLE_ID
+from helpers.codes import TOKEN_ERROR
+from models.roles import TROOPER_ROLE_ID, VADER_ROLE_ID
 
 from .auth_codes import JWT_ALGORITHM, JWT_SECRET
 
@@ -22,6 +23,7 @@ def vader_wrapper(fn):
         """
         verify_jwt_in_request()
         claims = get_jwt_claims()
+        print(claims)
         if str(UUID(VADER_ROLE_ID)) not in claims['roles']:
             return jsonify(msg='Admins only!'), 403
         else:

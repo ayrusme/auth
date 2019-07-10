@@ -6,10 +6,11 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
                                 get_jwt_identity, jwt_required)
 
 from auth.auth import vader_wrapper
-from helpers.codes import (ALL_ROLES, BAD_REQUEST, GENERIC_SUCCESS,
-                           NOT_IMPLEMENTED, STORM_TROOPER, VADER)
-from models.user import (add_address, add_role, get_addresses, get_user,
-                         modify_user, register_user)
+from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
+                           NOT_IMPLEMENTED)
+from models.roles import ALL_ROLES
+from models.user import (add_address, add_role, get_addresses, get_full_roles,
+                         get_user, modify_user, register_user)
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
@@ -35,7 +36,7 @@ def signup_super_admin():
     """
     response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
-        response = register_user(request.get_json(), VADER)
+        response = register_user(request.get_json(), ALL_ROLES['VADER'])
     return jsonify(response['payload']), response['status_code']
 
 
@@ -47,7 +48,7 @@ def signup_admin():
     """
     response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
-        response = register_user(request.get_json(), STORM_TROOPER)
+        response = register_user(request.get_json(), ALL_ROLES['TROOPER'])
     return jsonify(response['payload']), response['status_code']
 
 
@@ -91,7 +92,7 @@ def get_address():
     return jsonify(response['payload']), response['status_code']
 
 
-@USER_BLUEPRINT.route('/roles', methods=["GET"])
+@USER_BLUEPRINT.route('/all-roles', methods=["GET"])
 @jwt_required
 @vader_wrapper
 def get_all_roles():
@@ -99,7 +100,19 @@ def get_all_roles():
     Endpoint which will return all the roles
     """
     response = deepcopy(GENERIC_SUCCESS)
-    response['payload']['roles'] = deepcopy(ALL_ROLES)
+    response['payload']['roles'] = ALL_ROLES
+    return jsonify(response['payload']), response['status_code']
+
+
+@USER_BLUEPRINT.route('/roles', methods=["GET"])
+@jwt_required
+def get_user_roles():
+    """
+    Endpoint which will return all the roles for the given user
+    """
+    response = deepcopy(GENERIC_SUCCESS)
+    user_id = get_jwt_identity()
+    response['payload']['roles'] = get_full_roles(user_id)
     return jsonify(response['payload']), response['status_code']
 
 # MODIFY ENDPOINTS

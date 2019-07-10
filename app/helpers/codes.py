@@ -1,31 +1,6 @@
 """
 This file contains all static references
 """
-# Roles
-VADER_ROLE_ID = "8a3aba91-c925-588b-90ec-d2cd58f73c57"
-TROOPER_ROLE_ID = "5ab57aa8-3e92-53c5-ab19-8099ccd7627a"
-REBEL_ROLE_ID = "649a4be4-673d-52be-b64a-6a7fed720bdf"
-
-VADER = {
-    "guid": VADER_ROLE_ID,
-    "role_name": "VADER",
-    "description": "If only you knew the power of the dark side!"
-}
-
-STORM_TROOPER = {
-    "guid": TROOPER_ROLE_ID,
-    "role_name": "STORM_TROOPER",
-    "description": "These aren't the roles you're looking for!"
-}
-
-REBEL = {
-    "guid": REBEL_ROLE_ID,
-    "role_name": "REBEL",
-    "description": "The rebel scum are at tantooine!"
-}
-
-ALL_ROLES = [VADER, STORM_TROOPER, REBEL]
-
 # Status Messages
 ERROR_STATUS = "error"
 SUCCESS_STATUS = "success"
@@ -141,6 +116,6 @@ EXCEPTION_RES = {
     "payload": {
         "status": ERROR_STATUS,
         "message": "Something really bad happened!",
-        "description": ""
+        "description": "Some desc will be filled here. If not, it's a shit bug"
     }
 }

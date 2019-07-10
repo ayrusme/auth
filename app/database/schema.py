@@ -13,7 +13,6 @@ from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
 from geoalchemy2 import Geometry
 
-from helpers.codes import REBEL, STORM_TROOPER, VADER
 from helpers.helpers import CURRENT_TIME
 
 Base = declarative_base(metaclass=sqlamp.DeclarativeMeta)
@@ -227,6 +226,16 @@ class SystemRole(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "role_name": self.role_name,
+            "description": self.description
+        }
 
 
 class UserRole(Base):
