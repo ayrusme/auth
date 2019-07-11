@@ -48,18 +48,11 @@ def register_user(user_details, role=ALL_ROLES['REBEL']):
                         "updated_at": datetime.now(),
                     }, **user_details
                 )
-                # assign role
-                user_role = UserRole(**{
-                    "guid": uuid.uuid4().hex,
-                    "user_id": user_id,
-                    "role_id": role['guid']
-                })
                 # create user object
                 user = User(**{
                     "guid": user_id,
                     "phone": user_details['username'],
-                    "authentication": [user_authentication],
-                    "role": [user_role]
+                    "authentication": [user_authentication]
                 })
                 session.add(user)
                 session.commit()
@@ -192,7 +185,7 @@ def get_addresses(user_id):
     session.close()
     return response
 
-# MODIFY
+# UPDATE
 
 
 def modify_user(user_id, user_details):
@@ -236,14 +229,13 @@ def add_role(user_id, roles):
 
     Params
     --------------
-    user_details: dict
-        The details of the user that needs to be updated
+    user_id: string
+        The user
 
     Returns
     --------------
     NOT_FOUND: dict
         If the user is not found
-
     """
     response = deepcopy(BAD_REQUEST)
     session = SESSION()
@@ -264,9 +256,11 @@ def add_role(user_id, roles):
     session.close()
     return response
 
+# DELETE
 
 def delete_user(user_id):
     """
+    TODO
     Function to delete an user from the system
 
     user_id: String
@@ -279,9 +273,12 @@ def delete_user(user_id):
 
 def delete_users(users):
     """
+    TODO
     Function to delete a lot of users from the system
 
     users: list
         List of users to be deleted from the system
+
+    Caution: Remove dangling references as well
     """
     return

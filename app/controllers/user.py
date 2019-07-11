@@ -18,7 +18,7 @@ USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 # CREATE ENDPOINTS
 
 
-@USER_BLUEPRINT.route('/create-rebel', methods=['POST'])
+@USER_BLUEPRINT.route('/create-user', methods=['POST'])
 def signup():
     """
     Endpoint to allow users to signup
@@ -37,18 +37,6 @@ def signup_super_admin():
     response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
         response = register_user(request.get_json(), ALL_ROLES['VADER'])
-    return jsonify(response['payload']), response['status_code']
-
-
-@USER_BLUEPRINT.route('/create-trooper', methods=['POST'])
-@vader_wrapper
-def signup_admin():
-    """
-    Endpoint to allow users to signup
-    """
-    response = deepcopy(BAD_REQUEST)
-    if hasattr(request, "json") and request.json is not None:
-        response = register_user(request.get_json(), ALL_ROLES['TROOPER'])
     return jsonify(response['payload']), response['status_code']
 
 
@@ -92,43 +80,7 @@ def get_address():
     return jsonify(response['payload']), response['status_code']
 
 
-@USER_BLUEPRINT.route('/all-roles', methods=["GET"])
-@jwt_required
-@vader_wrapper
-def get_all_roles():
-    """
-    Endpoint which will return all the roles
-    """
-    response = deepcopy(GENERIC_SUCCESS)
-    response['payload']['roles'] = ALL_ROLES
-    return jsonify(response['payload']), response['status_code']
-
-
-@USER_BLUEPRINT.route('/roles', methods=["GET"])
-@jwt_required
-def get_user_roles():
-    """
-    Endpoint which will return all the roles for the given user
-    """
-    response = deepcopy(GENERIC_SUCCESS)
-    user_id = get_jwt_identity()
-    response['payload']['roles'] = get_full_roles(user_id)
-    return jsonify(response['payload']), response['status_code']
-
 # MODIFY ENDPOINTS
-
-
-@USER_BLUEPRINT.route('/update-role', methods=['POST'])
-@jwt_required
-@vader_wrapper
-def add_role():
-    """
-    Endpoint to allow users to modify roles
-    """
-    response = deepcopy(BAD_REQUEST)
-    if hasattr(request, "json") and request.json is not None:
-        response = add_role(request.json)
-    return jsonify(response['payload']), response['status_code']
 
 
 @USER_BLUEPRINT.route('/update-address', methods=['POST'])
