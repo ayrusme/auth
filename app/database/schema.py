@@ -52,7 +52,6 @@ class User(Base):
     phone = Column(String(25), nullable=False)
     addresses = relationship('Address', lazy=True)
     authentication = relationship('UserAuthentication', backref='user')
-    role = relationship('UserRole', backref='user')
     last_login = Column(DateTime)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),

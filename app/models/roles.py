@@ -28,8 +28,8 @@ STORM_TROOPER = {
 
 ENSIGN = {
     "guid": ENSIGN_ROLE_ID,
-    "role_name": "REBEL",
-    "description": "The rebel scum are at tantooine!"
+    "role_name": "ENSIGN",
+    "description": "You're sweating, Ensign"
 }
 
 

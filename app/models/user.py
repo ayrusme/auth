@@ -13,12 +13,12 @@ from models.roles import ALL_ROLES
 
 from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
                USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address,
-               SystemRole, User, UserAuthentication, UserRole)
+               SystemRole, User, UserAuthentication)
 
 # CREATE
 
 
-def register_user(user_details, role=ALL_ROLES['REBEL']):
+def register_user(user_details):
     """
     Model for creating a new user
 
@@ -26,8 +26,6 @@ def register_user(user_details, role=ALL_ROLES['REBEL']):
     ---------------
     user_details: dict
         The details of the user, enough to pass the AUTH SCHEMA
-    role: dict
-        An optional parameter defining the role of the user
     """
     response = deepcopy(BAD_REQUEST)
     # Validate the incoming details
@@ -90,49 +88,6 @@ def add_address(user_id, address):
     return response
 
 # READ
-
-
-def get_roles(user_id):
-    """
-    Function to get all the roles of the given user_id
-    """
-    session = SESSION()
-    result = []
-    try:
-        user_roles, session = find_record(UserRole, session, {
-            "user_id": user_id
-        }, False)
-        result = [role.role_id for role in user_roles]
-    except Exception as exp:
-        print(exp)
-        session.rollback()
-    session.close()
-    return result
-
-
-def get_full_roles(user_id):
-    """
-    Function to get all the roles of the given user_id
-    """
-    session = SESSION()
-    result = []
-    try:
-        # user_roles, session = find_record(UserRole, session, {
-        #     "user_id": user_id
-        # }, False)
-        roles = session.query(UserRole, SystemRole).filter(
-            UserRole.role_id == SystemRole.guid
-        ).filter(
-            UserRole.user_id == user_id
-        ).all()
-        for role in roles:
-            user_role, system_role = role
-            result.append(system_role.serialize)
-    except Exception as exp:
-        print(exp)
-        session.rollback()
-    session.close()
-    return result
 
 
 def get_user(user_details):
@@ -222,39 +177,6 @@ def modify_user(user_id, user_details):
     session.close()
     return response
 
-
-def add_role(user_id, roles):
-    """
-    Function to add a role for the user
-
-    Params
-    --------------
-    user_id: string
-        The user
-
-    Returns
-    --------------
-    NOT_FOUND: dict
-        If the user is not found
-    """
-    response = deepcopy(BAD_REQUEST)
-    session = SESSION()
-    try:
-        user, session = find_record(User, session, {
-            "guid": user_id
-        })
-        if user:
-            for key, value in user_details.items():
-                if hasattr(user, key):
-                    setattr(user, key, value)
-            session.commit()
-            response = deepcopy(GENERIC_SUCCESS)
-    except Exception as exp:
-        session.rollback()
-        response = deepcopy(EXCEPTION_RES)
-        response['payload']['description'] = repr(exp)
-    session.close()
-    return response
 
 # DELETE
 
