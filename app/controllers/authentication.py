@@ -10,7 +10,7 @@ from flask_jwt_extended import (create_access_token, get_jwt_identity,
                                 jwt_refresh_token_required)
 
 from auth.auth_codes import EXPIRY_DURATION
-from helpers.codes import AUTH_OKAY, BAD_REQUEST, NOT_AUTHENTICATED, TOKEN_ERROR
+from helpers.codes import AUTH_OKAY, BAD_REQUEST
 from models.authentication import login
 
 AUTH_BLUEPRINT = Blueprint(

@@ -1,11 +1,10 @@
 from copy import deepcopy
 
-from flask import abort, jsonify, request
+from flask import jsonify, request
 from flask.blueprints import Blueprint
 from flask_jwt_extended import (create_access_token, get_jwt_claims,
                                 get_jwt_identity, jwt_required)
 
-from auth.auth import vader_wrapper
 from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
                            NOT_IMPLEMENTED)
 from models.roles import ALL_ROLES

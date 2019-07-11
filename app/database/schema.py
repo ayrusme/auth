@@ -1,14 +1,12 @@
 """
 This file contains the schema for all the tables used in this project
 """
-import uuid
-from datetime import datetime
 
 import sqlamp
 from sqlalchemy import (Boolean, Column, DateTime, ForeignKey, Index, Integer,
                         Sequence, String, Text)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import backref, deferred, relationship
+from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
 from geoalchemy2 import Geometry
