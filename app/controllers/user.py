@@ -8,8 +8,8 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
 from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
                            NOT_IMPLEMENTED)
 from models.roles import ALL_ROLES
-from models.user import (add_address, add_role, get_addresses, get_full_roles,
-                         get_user, modify_user, register_user)
+from models.user import (add_address, get_addresses, get_user, modify_user,
+                         register_user)
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
@@ -25,17 +25,6 @@ def signup():
     response = deepcopy(BAD_REQUEST)
     if hasattr(request, "json") and request.json is not None:
         response = register_user(request.get_json())
-    return jsonify(response['payload']), response['status_code']
-
-
-@USER_BLUEPRINT.route('/create-vader', methods=['POST'])
-def signup_super_admin():
-    """
-    Endpoint to allow users to signup
-    """
-    response = deepcopy(BAD_REQUEST)
-    if hasattr(request, "json") and request.json is not None:
-        response = register_user(request.get_json(), ALL_ROLES['VADER'])
     return jsonify(response['payload']), response['status_code']
 
 
