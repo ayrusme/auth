@@ -35,7 +35,8 @@ def login(username, password):
     """
     response = deepcopy(NOT_AUTHENTICATED)
     session = SESSION()
-    # result, session = find_record(UserAuthentication, session, {"username": username})
+    # TODO last_login
+    # TODO Failed passwords and login attempts
     try:
         user, auth = session.query(User, UserAuthentication).filter(
             UserAuthentication.username == username

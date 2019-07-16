@@ -69,28 +69,6 @@ def ping_connection(connection, branch):
         connection.should_close_with_result = save_should_close_with_result
 
 
-# INIT ROLES
-DB_SESSION = SESSION()
-
-try:
-    for role in ALL_ROLES.keys():
-        database_role = SystemRole(**ALL_ROLES[role])
-        RESULT = DB_SESSION.query(SystemRole).filter(
-            SystemRole.guid == database_role.guid,
-        ).first()
-        if not RESULT:
-            print(f"Adding {database_role.role_name}")
-            DB_SESSION.add(database_role)
-    DB_SESSION.commit()
-except IntegrityError as exp:
-    print(exp)
-    print("Seems like the roles are added")
-except Exception as exp:
-    print("insane fuckup")
-    print(exp)
-    DB_SESSION.rollback()
-
-
 def find_record(model, session, filter_dict=None, first_only=True):
     """
     Finds the record by the filter given in a dictionary
