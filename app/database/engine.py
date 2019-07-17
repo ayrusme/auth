@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from config.config import DB_URI
 from models.roles import *
 
-from . import Base, SystemRole
+from . import Base
 
 _ENGINE = create_engine(DB_URI)
 

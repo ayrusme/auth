@@ -12,8 +12,8 @@ from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
 from models.roles import ALL_ROLES
 
 from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
-               USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address,
-               SystemRole, User, UserAuthentication)
+               USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
+               UserAuthentication)
 
 # CREATE
 
