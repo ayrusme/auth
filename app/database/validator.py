@@ -45,7 +45,7 @@ AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
-    "username": And(str, len),
+    "username": Regex(r"[6789]{1}[0-9]{9}"),
     "password": And(str, len),
 })
 

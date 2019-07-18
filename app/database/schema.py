@@ -182,6 +182,8 @@ class Address(Base):
         Returns a JSON variant of the model
         """
         return {
+            "guid": self.guid,
+            "name": self.name,
             "address_line1": self.address_line1,
             "address_line2": self.address_line2,
             "city": self.city,

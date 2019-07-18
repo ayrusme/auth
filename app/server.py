@@ -1,5 +1,11 @@
 """
 The file to start the server for Project Astrix
+
+TODO
+# Change password
+# Forgot password
+# User sign up mobile regex
+
 """
 from flask import Flask, jsonify
 from flask_cors import CORS
