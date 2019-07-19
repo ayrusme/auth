@@ -9,7 +9,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token
 from auth.auth_codes import EXPIRY_DURATION
 from database.engine import SESSION
 from database.schema import User, UserAuthentication
-from helpers.codes import AUTH_OKAY, NOT_AUTHENTICATED
+from helpers.codes import AUTH_OKAY, EXCEPTION_RES, NOT_AUTHENTICATED
 
 
 def login(username, password):
@@ -40,6 +40,8 @@ def login(username, password):
     try:
         user, auth = session.query(User, UserAuthentication).filter(
             UserAuthentication.username == username
+        ).filter(
+            UserAuthentication.username == User.phone
         ).first()
         if user and auth and auth.password == password:
             response = deepcopy(AUTH_OKAY)
@@ -56,6 +58,9 @@ def login(username, password):
             response['payload']['not_before'] = int(
                 time() + EXPIRY_DURATION.seconds)
     except Exception as exp:
-        print(exp)
+        print(exp, "login bug")
+        response = deepcopy(EXCEPTION_RES)
+        response['payload']['description'] = repr(exp)
+    session.flush()
     session.close()
     return response
