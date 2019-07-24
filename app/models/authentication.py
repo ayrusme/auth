@@ -38,25 +38,27 @@ def login(username, password):
     # TODO last_login
     # TODO Failed passwords and login attempts
     try:
-        user, auth = session.query(User, UserAuthentication).filter(
+        result = session.query(User, UserAuthentication).filter(
             UserAuthentication.username == username
         ).filter(
             UserAuthentication.username == User.phone
         ).first()
-        if user and auth and auth.password == password:
-            response = deepcopy(AUTH_OKAY)
-            response['payload']['user'] = user.serialize
-            response['payload']['refresh_token'] = create_refresh_token(
-                identity=user.guid,
-                expires_delta=False
-            )
-            response['payload']['access_token'] = create_access_token(
-                identity=user.guid,
-                expires_delta=EXPIRY_DURATION
-            )
-            response['payload']['expires_in'] = EXPIRY_DURATION.seconds
-            response['payload']['not_before'] = int(
-                time() + EXPIRY_DURATION.seconds)
+        if result:
+            user, auth = result
+            if user and auth and auth.password == password:
+                response = deepcopy(AUTH_OKAY)
+                response['payload']['user'] = user.serialize
+                response['payload']['refresh_token'] = create_refresh_token(
+                    identity=user.guid,
+                    expires_delta=False
+                )
+                response['payload']['access_token'] = create_access_token(
+                    identity=user.guid,
+                    expires_delta=EXPIRY_DURATION
+                )
+                response['payload']['expires_in'] = EXPIRY_DURATION.seconds
+                response['payload']['not_before'] = int(
+                    time() + EXPIRY_DURATION.seconds)
     except Exception as exp:
         print(exp, "login bug")
         response = deepcopy(EXCEPTION_RES)
