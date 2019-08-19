@@ -2,9 +2,16 @@
 The file to hold the configuration for the project
 """
 import json
+import os
 
 with open('config.json') as file:
     DATA = json.load(file)
+
+    if "SETUP" in os.environ:
+        try:
+            DATA = DATA.get(os.environ["SETUP"])
+        except Exception:
+            DATA = DATA.get("LOCAL")
 
     # read server configuration
     SERVER_URL = DATA['SERVER']['URL'] if DATA['SERVER']['URL'] else "127.0.0.1"

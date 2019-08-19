@@ -1,19 +1,40 @@
 {
-    "SERVER": {
-        "URL": "127.0.0.1",
-        "PORT": 8080
+    "LOCAL": {
+        "SERVER": {
+            "URL": "127.0.0.1",
+            "PORT": 8080
+        },
+        "DATABASE": {
+            "TYPE": "postgresql",
+            "NAME": "astrix",
+            "DRIVER": "pg8000",
+            "USERNAME": "suryaraman",
+            "PASSWORD": "",
+            "HOST": "localhost",
+            "PORT": 5432
+        },
+        "LOG": {
+            "LEVEL": "INFO",
+            "FILE": "logs/logs.log"
+        }
     },
-    "DATABASE": {
-        "TYPE": "postgresql",
-        "NAME": "astrix",
-        "DRIVER": "pg8000",
-        "USERNAME": "suryaraman",
-        "PASSWORD": "",
-        "HOST": "localhost",
-        "PORT": 5432
-    },
-    "LOG": {
-        "LEVEL": "INFO",
-        "FILE": "logs/logs.log"
+    "DOCKER": {
+        "SERVER": {
+            "URL": "127.0.0.1",
+            "PORT": 8080
+        },
+        "DATABASE": {
+            "TYPE": "postgresql",
+            "NAME": "astrix",
+            "DRIVER": "pg8000",
+            "USERNAME": "suryaraman",
+            "PASSWORD": "",
+            "HOST": "localhost",
+            "PORT": 5432
+        },
+        "LOG": {
+            "LEVEL": "INFO",
+            "FILE": "logs/logs.log"
+        }
     }
 }
