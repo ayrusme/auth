@@ -8,10 +8,7 @@ with open('config.json') as file:
     DATA = json.load(file)
 
     if "SETUP" in os.environ:
-        try:
-            DATA = DATA.get(os.environ["SETUP"])
-        except Exception:
-            DATA = DATA.get("LOCAL")
+        DATA = DATA.get(os.environ["SETUP"], "LOCAL")
 
     # read server configuration
     SERVER_URL = DATA['SERVER']['URL'] if DATA['SERVER']['URL'] else "127.0.0.1"
@@ -30,16 +27,26 @@ with open('config.json') as file:
     USERNAME = DATA['DATABASE']['USERNAME'] if DATA['DATABASE']['USERNAME'] else "root"
     PASSWORD = DATA['DATABASE']['PASSWORD'] if DATA['DATABASE']['PASSWORD'] else "root"
 
-    # TODO If password exists, add password to URI
     # construct the URI
-    DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}".format(
-        TYPE=DATABASE_TYPE,
-        DRIVER=DATABASE_DRIVER,
-        USERNAME=USERNAME,
-        HOST=HOST,
-        PORT=PORT,
-        NAME=DATABASE_NAME,
-    )
+    if PASSWORD != "":
+        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{NAME}".format(
+            TYPE=DATABASE_TYPE,
+            DRIVER=DATABASE_DRIVER,
+            USERNAME=USERNAME,
+            PASSWORD=PASSWORD,
+            HOST=HOST,
+            PORT=PORT,
+            NAME=DATABASE_NAME,
+        )
+    else:
+        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}".format(
+            TYPE=DATABASE_TYPE,
+            DRIVER=DATABASE_DRIVER,
+            USERNAME=USERNAME,
+            HOST=HOST,
+            PORT=PORT,
+            NAME=DATABASE_NAME,
+        )
 
     LOG_LEVEL = DATA['LOG']['LEVEL'] if DATA['LOG']['LEVEL'] else "INFO"
     LOG_FILE = DATA['LOG']['FILE'] if DATA['LOG']['FILE'] else "logs.log"

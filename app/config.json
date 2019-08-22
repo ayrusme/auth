@@ -18,19 +18,19 @@
             "FILE": "logs/logs.log"
         }
     },
-    "DOCKER": {
+    "CLOUD": {
         "SERVER": {
             "URL": "127.0.0.1",
             "PORT": 8080
         },
         "DATABASE": {
             "TYPE": "postgresql",
-            "NAME": "astrix",
+            "NAME": "auth",
             "DRIVER": "pg8000",
             "USERNAME": "suryaraman",
-            "PASSWORD": "",
-            "HOST": "localhost",
-            "PORT": 5432
+            "PASSWORD": "Sca1eW@y",
+            "HOST": "51.159.27.223",
+            "PORT": 19783
         },
         "LOG": {
             "LEVEL": "INFO",
