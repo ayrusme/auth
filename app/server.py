@@ -54,4 +54,5 @@ if __name__ == '__main__':
         host=SERVER_URL,
         port=SERVER_PORT,
         debug=True,
+        threaded=True
     )
