@@ -10,6 +10,7 @@ TODO
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from werkzeug.contrib.fixers import ProxyFix
 
 from auth.auth_codes import JWT_SECRET
 from config.config import SERVER_PORT, SERVER_URL
@@ -21,6 +22,8 @@ from helpers.codes import TOKEN_ERROR
 APP = Flask(__name__)
 
 CORS(APP)
+
+APP.wsgi_app = ProxyFix(APP.wsgi_app)
 
 APP.config['JWT_SECRET_KEY'] = JWT_SECRET
 JWT = JWTManager(APP)
