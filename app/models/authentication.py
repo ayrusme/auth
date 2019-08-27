@@ -63,6 +63,5 @@ def login(username, password):
         print(exp, "login bug")
         response = deepcopy(EXCEPTION_RES)
         response['payload']['description'] = repr(exp)
-    session.flush()
-    session.close()
+    session.remove()
     return response
