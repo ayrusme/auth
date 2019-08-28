@@ -29,7 +29,7 @@ with open('config.json') as file:
 
     # construct the URI
     if PASSWORD != "":
-        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{NAME}".format(
+        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{NAME}?application_name=auth".format(
             TYPE=DATABASE_TYPE,
             DRIVER=DATABASE_DRIVER,
             USERNAME=USERNAME,
@@ -39,7 +39,7 @@ with open('config.json') as file:
             NAME=DATABASE_NAME,
         )
     else:
-        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}".format(
+        DB_URI = "{TYPE}+{DRIVER}://{USERNAME}@{HOST}:{PORT}/{NAME}?application_name=auth".format(
             TYPE=DATABASE_TYPE,
             DRIVER=DATABASE_DRIVER,
             USERNAME=USERNAME,

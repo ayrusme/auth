@@ -19,6 +19,7 @@ pg8000 = "*"
 autopep8 = "*"
 geoalchemy2 = "*"
 gunicorn = "*"
+loguru = "*"
 
 [dev-packages]
 autopep8 = "*"

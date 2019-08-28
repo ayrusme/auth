@@ -10,7 +10,7 @@ from models.roles import *
 
 from . import Base
 
-_ENGINE = create_engine(DB_URI)
+_ENGINE = create_engine(DB_URI, pool_use_lifo=True, pool_pre_ping=True, pool_recycle=60)
 
 try:
     _ = _ENGINE.connect()

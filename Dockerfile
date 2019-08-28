@@ -8,4 +8,4 @@ WORKDIR /app
 
 ENV SETUP=CLOUD
 
-CMD ["pipenv", "run", "gunicorn", "server:APP", "-b", "0.0.0.0:8080", "-w", "4"]
+CMD ["pipenv", "run", "gunicorn", "server:APP", "-b", "0.0.0.0:8080", "-w", "2"]
