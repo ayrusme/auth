@@ -61,7 +61,7 @@ def register_user(user_details):
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
             response['payload']['description'] = repr(exp)
-        session.remove()
+        SESSION.remove()
     return response
 
 
@@ -84,7 +84,7 @@ def add_address(user_id, address):
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
             response['payload']['description'] = repr(exp)
-        session.remove()
+        SESSION.remove()
     return response
 
 # READ
@@ -110,7 +110,7 @@ def get_user(user_details):
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
             response['payload']['description'] = repr(exp)
-        session.remove()
+        SESSION.remove()
     return response
 
 
@@ -137,7 +137,7 @@ def get_addresses(user_id):
         session.rollback()
         response = deepcopy(EXCEPTION_RES)
         response['payload']['description'] = repr(exp)
-    session.remove()
+    SESSION.remove()
     return response
 
 # UPDATE
@@ -174,7 +174,7 @@ def modify_user(user_id, user_details):
         session.rollback()
         response = deepcopy(EXCEPTION_RES)
         response['payload']['description'] = repr(exp)
-    session.remove()
+    SESSION.remove()
     return response
 
 
