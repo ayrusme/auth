@@ -9,7 +9,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import deferred, relationship
 from sqlalchemy.sql import func
 from sqlalchemy_utils import EmailType, PasswordType, UUIDType
-from geoalchemy2 import Geometry
 
 from helpers.helpers import CURRENT_TIME
 
@@ -125,6 +124,32 @@ class UserAuthentication(Base):
     )
 
 
+class Apartment(Base):
+    """
+    The model for having an apartment for the product
+    """
+    __tablename__ = "apartments"
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    name = Column(String(30), nullable=False)
+    address_line1 = Column(String(120), nullable=False)
+    address_line2 = Column(String(120), nullable=True)
+    city = Column(String(30), nullable=False)
+    country = Column(String(20), nullable=False)
+    pin_code = Column(Integer, nullable=False)
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+
 class Address(Base):
     """
     The model for the address of a consumer
@@ -156,12 +181,10 @@ class Address(Base):
         UUIDType(binary=False), ForeignKey('user.guid'),
         nullable=False,
     )
-    address_line1 = Column(String(120), nullable=False)
-    address_line2 = Column(String(120), nullable=True)
-    city = Column(String(30), nullable=False)
-    country = Column(String(20), nullable=False)
-    pin_code = Column(Integer, nullable=False)
-    lat_long = Column(Geometry('POINT'), nullable=False)
+    apartment_id = Column(
+        UUIDType(binary=False), ForeignKey('apartments.guid'),
+        nullable=False,
+    )
     default = Column(Boolean, nullable=False, default=False)
     name = Column(String(30), nullable=False)
     created_at = deferred(

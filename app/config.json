@@ -6,7 +6,7 @@
         },
         "DATABASE": {
             "TYPE": "postgresql",
-            "NAME": "astrix",
+            "NAME": "auth",
             "DRIVER": "pg8000",
             "USERNAME": "suryaraman",
             "PASSWORD": "",
