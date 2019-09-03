@@ -137,6 +137,8 @@ class Apartment(Base):
     city = Column(String(30), nullable=False)
     country = Column(String(20), nullable=False)
     pin_code = Column(Integer, nullable=False)
+    created_by = Column(String(30), nullable=False)
+    modified_by = Column(String(30), nullable=False)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults',
@@ -179,24 +181,25 @@ class Address(Base):
     guid = Column(UUIDType(binary=False), primary_key=True)
     user_id = Column(
         UUIDType(binary=False), ForeignKey('user.guid'),
-        nullable=False,
+        nullable=False
     )
     apartment_id = Column(
         UUIDType(binary=False), ForeignKey('apartments.guid'),
-        nullable=False,
+        nullable=False
     )
-    default = Column(Boolean, nullable=False, default=False)
+    address_line1 = Column(String(120), nullable=False)  # door number
+    default = Column(Boolean, nullable=False, default=True)
     name = Column(String(30), nullable=False)
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
-        group='defaults',
+        group='defaults'
     )
     updated_at = deferred(
         Column(
             DateTime, nullable=False,
             default=CURRENT_TIME(), onupdate=func.now(),
         ),
-        group='defaults',
+        group='defaults'
     )
 
     @property

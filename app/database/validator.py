@@ -33,12 +33,10 @@ ADDRESS_SCHEMA_VALIDATOR = Schema({
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
     "address_line1": And(str, len),
-    Optional("address_line2"): And(str, len),
-    "city": And(str, len),
-    "country": And(str, len),
-    "pin_code": int,
-    "lat_long": And(str, len),
-    Optional("name"): And(str, len)
+    Optional("name"): And(str, len),
+    "user_id": And(str, len),
+    "apartment_id": And(str, len),
+    "default": bool
 })
 
 AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
@@ -49,10 +47,16 @@ AUTHENTICATION_SCHEMA_VALIDATOR = Schema({
     "password": And(str, len),
 })
 
-ROLE_UPDATE_VALIDATOR = Schema({
+APARTMENT_CREATE_VALIDATOR = Schema({
     Forbidden("guid"): And(str, len),
     Forbidden("created_at"): And(str, len),
     Forbidden("updated_at"): And(str, len),
-    "roles": list,
-    "user_id": And(str, len)
+    Forbidden("created_by"): And(str, len),
+    Forbidden("modified_by"): And(str, len),
+    Optional("address_line2"): And(str, len),
+    "name": And(str, len),
+    "address_line1": And(str, len),
+    "city": And(str, len),
+    "country": And(str, len),
+    "pin_code": int,
 })
