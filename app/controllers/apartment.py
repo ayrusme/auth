@@ -10,9 +10,9 @@ from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
 from models.apartment import (add_apartment, get_apartment)
 
 APARTMENT_BLUEPRINT = Blueprint(
-    'user_routes_v1', __name__, url_prefix='/v1/apartment')
+    'apartment_routes_v1', __name__, url_prefix='/v1/apartment')
 APARTMENT_INTERNAL = Blueprint(
-    'user_routes_v1', __name__, url_prefix='/v1/internal/apartment')
+    'apartment_internal_routes_v1', __name__, url_prefix='/v1/internal/apartment')
 # CREATE ENDPOINTS
 
 
@@ -31,7 +31,7 @@ def create_apartment():
 
 @APARTMENT_BLUEPRINT.route('/get-apartment', methods=['GET', 'POST'])
 @jwt_required
-def get_apartment():
+def get_apartment_route():
     """
     Endpoint to allow users to signup
     """

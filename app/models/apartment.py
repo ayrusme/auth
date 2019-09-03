@@ -4,7 +4,8 @@ from datetime import datetime
 
 from database.engine import SESSION, find_record
 from database.validator import APARTMENT_CREATE_VALIDATOR
-from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS)
+from helpers.codes import (BAD_REQUEST, EXCEPTION_RES,
+                           GENERIC_SUCCESS, RECORD_FOUND)
 
 from . import Apartment
 
@@ -25,18 +26,18 @@ def add_apartment(user_id, apartment):
             # TODO don't add apartment if same already exists LOW_PRIORITY
             apartment = APARTMENT_CREATE_VALIDATOR.validate(
                 apartment)
-            apartment = Apartment({
+            apartment = Apartment(
                 **{
                     "guid": uuid.uuid4().hex,
                     "created_by": user_id,
                     "modified_by": user_id,
                     "created_at": datetime.now(),
                     "updated_at": datetime.now(),
-                }, **apartment
-            })
+                }, **apartment)
             session.add(apartment)
             session.commit()
-            response = deepcopy(REGISTER_SUCCESS)
+            response = deepcopy(GENERIC_SUCCESS)
+            response['payload']['apartment'] = apartment.serialize
         except Exception as exp:
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
@@ -59,10 +60,15 @@ def get_apartment(apartment_filter):
     response = deepcopy(BAD_REQUEST)
     try:
         session = SESSION()
-        result, session = find_record(Apartment, session, apartment_filter)
+        result, session = find_record(
+            model=Apartment,
+            session=session,
+            filter_dict=apartment_filter,
+            first_only=False
+        )
         if result:
             response = deepcopy(RECORD_FOUND)
-            response['payload'] = result.serialize
+            response['payload'] = [item.serialize for item in result]
     except Exception as exp:
         session.rollback()
         response = deepcopy(EXCEPTION_RES)

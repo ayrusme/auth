@@ -14,6 +14,7 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from auth.auth_codes import JWT_SECRET
 from config.config import SERVER_PORT, SERVER_URL
+from controllers.apartment import APARTMENT_BLUEPRINT, APARTMENT_INTERNAL
 from controllers.authentication import AUTH_BLUEPRINT
 from controllers.user import USER_BLUEPRINT
 from helpers.codes import TOKEN_ERROR
@@ -31,7 +32,8 @@ JWT = JWTManager(APP)
 # Register blueprints for controllers
 APP.register_blueprint(USER_BLUEPRINT)
 APP.register_blueprint(AUTH_BLUEPRINT)
-
+APP.register_blueprint(APARTMENT_BLUEPRINT)
+APP.register_blueprint(APARTMENT_INTERNAL)
 
 @APP.route('/ping', methods=['GET'])
 def homepage():

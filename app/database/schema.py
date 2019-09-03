@@ -137,8 +137,8 @@ class Apartment(Base):
     city = Column(String(30), nullable=False)
     country = Column(String(20), nullable=False)
     pin_code = Column(Integer, nullable=False)
-    created_by = Column(String(30), nullable=False)
-    modified_by = Column(String(30), nullable=False)
+    created_by = Column(UUIDType(binary=False))
+    modified_by = Column(UUIDType(binary=False))
     created_at = deferred(
         Column(DateTime, nullable=False, default=CURRENT_TIME()),
         group='defaults',
@@ -150,6 +150,21 @@ class Apartment(Base):
         ),
         group='defaults',
     )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "guid": self.guid,
+            "name": self.name,
+            "address_line1": self.address_line1,
+            "address_line2": self.address_line2,
+            "city": self.city,
+            "country": self.country,
+            "pin_code": self.pin_code
+        }
 
 
 class Address(Base):
@@ -201,18 +216,3 @@ class Address(Base):
         ),
         group='defaults'
     )
-
-    @property
-    def serialize(self):
-        """
-        Returns a JSON variant of the model
-        """
-        return {
-            "guid": self.guid,
-            "name": self.name,
-            "address_line1": self.address_line1,
-            "address_line2": self.address_line2,
-            "city": self.city,
-            "country": self.country,
-            "pin_code": self.pin_code
-        }
