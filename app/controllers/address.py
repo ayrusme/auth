@@ -29,7 +29,55 @@ def create_address():
     return jsonify(response['payload']), response['status_code']
 
 
-@ADDRESS_BLUEPRINT.route('/get-address', methods=['GET', 'POST'])
+@ADDRESS_BLUEPRINT.route('/get-address', methods=['GET'])
+@jwt_required
+def get_address_route():
+    """
+    Endpoint to allow users to signup
+    """
+    if request.method == 'GET':
+        # TODO
+        return jsonify(
+            {
+                "message": "You can pass the following items in any combination. Anything other than these \
+                    would yield results, but won't be of any use",
+                "payload": {
+                    "guid": {
+                        "mandatory": False,
+                        "type": "string"
+                    },
+                    "city": {
+                        "mandatory": False,
+                        "type": "string"
+                    },
+                    "country": {
+                        "mandatory": False,
+                        "type": "string"
+                    },
+                    "pin_code": {
+                        "mandatory": False,
+                        "type": "string"
+                    },
+                    "created_by": {
+                        "mandatory": False,
+                        "type": "string"
+                    },
+                    "modified_by": {
+                        "mandatory": False,
+                        "type": "string"
+                    }
+                }
+            }), 200
+    response = deepcopy(BAD_REQUEST)
+    user_id = get_jwt_identity()
+    if user_id:
+        response = get_address({
+            "user_id": user_id
+        })
+    return jsonify(response['payload']), response['status_code']
+
+
+@ADDRESS_BLUEPRINT.route('/search-address', methods=['GET', 'POST'])
 @jwt_required
 def get_address_route():
     """
