@@ -46,7 +46,7 @@ def get_address_route():
 
 @ADDRESS_BLUEPRINT.route('/search-address', methods=['GET', 'POST'])
 @jwt_required
-def get_address_route():
+def search_address_route():
     """
     Endpoint to allow users to signup
     """
