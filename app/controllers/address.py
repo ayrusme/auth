@@ -6,7 +6,7 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
                                 get_jwt_identity, jwt_required)
 
 from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
-                           NOT_IMPLEMENTED)
+                           NOT_IMPLEMENTED, NOT_AUTHENTICATED)
 from models.address import (add_address, get_address)
 
 ADDRESS_BLUEPRINT = Blueprint(
@@ -35,40 +35,7 @@ def get_address_route():
     """
     Endpoint to allow users to signup
     """
-    if request.method == 'GET':
-        # TODO
-        return jsonify(
-            {
-                "message": "You can pass the following items in any combination. Anything other than these \
-                    would yield results, but won't be of any use",
-                "payload": {
-                    "guid": {
-                        "mandatory": False,
-                        "type": "string"
-                    },
-                    "city": {
-                        "mandatory": False,
-                        "type": "string"
-                    },
-                    "country": {
-                        "mandatory": False,
-                        "type": "string"
-                    },
-                    "pin_code": {
-                        "mandatory": False,
-                        "type": "string"
-                    },
-                    "created_by": {
-                        "mandatory": False,
-                        "type": "string"
-                    },
-                    "modified_by": {
-                        "mandatory": False,
-                        "type": "string"
-                    }
-                }
-            }), 200
-    response = deepcopy(BAD_REQUEST)
+    response = deepcopy(NOT_AUTHENTICATED)
     user_id = get_jwt_identity()
     if user_id:
         response = get_address({
