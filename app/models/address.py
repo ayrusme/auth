@@ -3,41 +3,38 @@ from copy import deepcopy
 from datetime import datetime
 
 from database.engine import SESSION, find_record
-from database.validator import APARTMENT_VALIDATOR
+from database.validator import ADDRESS_VALIDATOR
 from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
                            NOT_FOUND, RECORD_FOUND)
 
-from . import Apartment
+from . import Address, Apartment, Block
 
 
-def add_apartment(user_id, apartment):
+def add_address(user_id, address):
     """
-    Model for creating a new apartment
+    Model for creating a new address
 
     Params
     ---------------
-    apartment: dict
+    address: dict
     """
     response = deepcopy(BAD_REQUEST)
     # Validate the incoming details
-    if APARTMENT_VALIDATOR.is_valid(apartment):
+    address['user_id'] = user_id
+    if ADDRESS_VALIDATOR.is_valid(address):
         session = SESSION()
         try:
-            # TODO don't add apartment if same already exists LOW_PRIORITY
-            apartment = APARTMENT_VALIDATOR.validate(
-                apartment)
-            apartment = Apartment(
-                **{
-                    "guid": uuid.uuid4().hex,
-                    "created_by": user_id,
-                    "modified_by": user_id,
-                    "created_at": datetime.now(),
-                    "updated_at": datetime.now(),
-                }, **apartment)
-            session.add(apartment)
+            # TODO don't add BLOCK if same already exists LOW_PRIORITY
+            address = ADDRESS_VALIDATOR.validate(
+                address)
+            address["guid"] = uuid.uuid4().hex
+            address["created_at"] = datetime.now()
+            address["updated_at"] = datetime.now()
+            address = Address(**address)
+            session.add(address)
             session.commit()
             response = deepcopy(GENERIC_SUCCESS)
-            response['payload']['result'] = apartment.serialize
+            # response['payload']['result'] = address.serialize TODO
         except Exception as exp:
             session.rollback()
             response = deepcopy(EXCEPTION_RES)
@@ -46,24 +43,24 @@ def add_apartment(user_id, apartment):
     return response
 
 
-def update_apartment():
+def update_address():
     pass
 
 
-def get_apartment(apartment_filter):
+def get_address(address_filter):
     """
-    get apartments
+    get addresss
 
-    apartment_filter: dict
+    address_filter: dict
         Filter, duh
     """
     response = deepcopy(NOT_FOUND)
     try:
         session = SESSION()
         result, session = find_record(
-            model=Apartment,
+            model=Address,
             session=session,
-            filter_dict=apartment_filter,
+            filter_dict=address_filter,
             first_only=False
         )
         if result:
@@ -77,5 +74,5 @@ def get_apartment(apartment_filter):
     return response
 
 
-def delete_apartment_by_id():
+def delete_address_by_id():
     pass

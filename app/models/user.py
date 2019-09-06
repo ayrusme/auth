@@ -11,7 +11,7 @@ from helpers.codes import (BAD_REQUEST, ENTITY_EXISTS, EXCEPTION_RES,
                            REGISTER_SUCCESS)
 from models.roles import ALL_ROLES
 
-from . import (ADDRESS_SCHEMA_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
+from . import (ADDRESS_VALIDATOR, AUTHENTICATION_SCHEMA_VALIDATOR,
                USER_SCHEMA_VALIDATOR, USER_UPDATE_VALIDATOR, Address, User,
                UserAuthentication)
 
@@ -65,33 +65,12 @@ def register_user(user_details):
     return response
 
 
-def add_address(user_id, address):
-    """
-    Function to add address to the given userID
-    """
-    response = deepcopy(BAD_REQUEST)
-    if ADDRESS_SCHEMA_VALIDATOR.is_valid(address):
-        address = ADDRESS_SCHEMA_VALIDATOR.validate(address)
-        address['guid'] = uuid.uuid4().hex
-        address['user_id'] = user_id
-        session = SESSION()
-        try:
-            address = Address(**address)
-            session.add(address)
-            session.commit()
-            response = deepcopy(GENERIC_SUCCESS)
-        except Exception as exp:
-            session.rollback()
-            response = deepcopy(EXCEPTION_RES)
-            response['payload']['description'] = repr(exp)
-        SESSION.remove()
-    return response
-
 # READ
 
 
 def get_user(user_details):
     """
+    TODO
     Function to get a user from a DB
 
     Returns
@@ -111,33 +90,6 @@ def get_user(user_details):
             response = deepcopy(EXCEPTION_RES)
             response['payload']['description'] = repr(exp)
         SESSION.remove()
-    return response
-
-
-def get_addresses(user_id):
-    """
-    Function to get all the addresses of the user
-
-    Returns
-    -----------
-    Array of addresses, empty array if no addresses are found
-    """
-    response = deepcopy(NOT_FOUND)
-    response['payload']['addresses'] = []
-    session = SESSION()
-    try:
-        result, session = find_record(Address, session, {
-            "user_id": user_id
-        }, False)
-        if result:
-            response = deepcopy(RECORD_FOUND)
-            response['payload']['addresses'] = [
-                item.serialize for item in result]
-    except Exception as exp:
-        session.rollback()
-        response = deepcopy(EXCEPTION_RES)
-        response['payload']['description'] = repr(exp)
-    SESSION.remove()
     return response
 
 # UPDATE

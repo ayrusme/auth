@@ -127,6 +127,9 @@ class UserAuthentication(Base):
 class Apartment(Base):
     """
     The model for having an apartment for the product
+
+    TODO
+    ENUM for city, country, pin_code
     """
     __tablename__ = "apartments"
 
@@ -167,6 +170,43 @@ class Apartment(Base):
         }
 
 
+class Block(Base):
+    """
+    Model for the buildings inside an apartment
+    """
+    __tablename__ = "blocks"
+
+    guid = Column(UUIDType(binary=False), primary_key=True)
+    name = Column(String(30), nullable=False)
+    apartment_id = Column(
+        UUIDType(binary=False), ForeignKey('apartments.guid'),
+        nullable=False
+    )
+    created_by = Column(UUIDType(binary=False), nullable=False)
+    modified_by = Column(UUIDType(binary=False), nullable=False)
+    created_at = deferred(
+        Column(DateTime, nullable=False, default=CURRENT_TIME()),
+        group='defaults',
+    )
+    updated_at = deferred(
+        Column(
+            DateTime, nullable=False,
+            default=CURRENT_TIME(), onupdate=func.now(),
+        ),
+        group='defaults',
+    )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "guid": self.guid,
+            "name": self.name
+        }
+
+
 class Address(Base):
     """
     The model for the address of a consumer
@@ -198,11 +238,11 @@ class Address(Base):
         UUIDType(binary=False), ForeignKey('user.guid'),
         nullable=False
     )
-    apartment_id = Column(
-        UUIDType(binary=False), ForeignKey('apartments.guid'),
+    block_id = Column(
+        UUIDType(binary=False), ForeignKey('blocks.guid'),
         nullable=False
     )
-    address_line1 = Column(String(120), nullable=False)  # door number
+    door_number = Column(String(120), nullable=False)  # door number
     default = Column(Boolean, nullable=False, default=True)
     name = Column(String(30), nullable=False)
     created_at = deferred(
@@ -216,3 +256,17 @@ class Address(Base):
         ),
         group='defaults'
     )
+
+    @property
+    def serialize(self):
+        """
+        Returns a JSON variant of the model
+        """
+        return {
+            "guid": self.guid,
+            "user_id": self.user_id,
+            "name": self.name,
+            "door_number": self.door_number,
+            "block_id": self.block_id,
+            "default": self.default
+        }

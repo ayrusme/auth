@@ -16,6 +16,8 @@ from auth.auth_codes import JWT_SECRET
 from config.config import SERVER_PORT, SERVER_URL
 from controllers.apartment import APARTMENT_BLUEPRINT, APARTMENT_INTERNAL
 from controllers.authentication import AUTH_BLUEPRINT
+from controllers.block import BLOCK_BLUEPRINT, BLOCK_INTERNAL
+from controllers.address import ADDRESS_BLUEPRINT, ADDRESS_INTERNAL
 from controllers.user import USER_BLUEPRINT
 from helpers.codes import TOKEN_ERROR
 
@@ -34,6 +36,11 @@ APP.register_blueprint(USER_BLUEPRINT)
 APP.register_blueprint(AUTH_BLUEPRINT)
 APP.register_blueprint(APARTMENT_BLUEPRINT)
 APP.register_blueprint(APARTMENT_INTERNAL)
+APP.register_blueprint(BLOCK_BLUEPRINT)
+APP.register_blueprint(BLOCK_INTERNAL)
+APP.register_blueprint(ADDRESS_BLUEPRINT)
+APP.register_blueprint(ADDRESS_INTERNAL)
+
 
 @APP.route('/ping', methods=['GET'])
 def homepage():

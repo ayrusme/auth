@@ -8,8 +8,7 @@ from flask_jwt_extended import (create_access_token, get_jwt_claims,
 from helpers.codes import (BAD_REQUEST, EXCEPTION_RES, GENERIC_SUCCESS,
                            NOT_IMPLEMENTED)
 from models.roles import ALL_ROLES
-from models.user import (add_address, get_addresses, get_user, modify_user,
-                         register_user)
+from models.user import get_user, modify_user, register_user
 
 USER_BLUEPRINT = Blueprint('user_routes_v1', __name__, url_prefix='/v1/user')
 
